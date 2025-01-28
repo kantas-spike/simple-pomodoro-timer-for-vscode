@@ -1,6 +1,6 @@
 {
-  "name": "pomodoro-timer",
-  "displayName": "pomodoro timer",
+  "name": "simple-pomodoro-timer",
+  "displayName": "Simple Pomodoro Timer",
   "description": "simple pomodoro timer",
   "version": "0.0.1",
   "engines": {
