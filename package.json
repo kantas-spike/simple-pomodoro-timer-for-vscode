@@ -12,6 +12,28 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": [
+      {
+        "title": "Simple Pomodoro Timer",
+        "properties": {
+          "simple-pomodoro-timer.defaultWorkingTime": {
+            "type": "number",
+            "default": 25,
+            "description": "This is the default working time set for the pomodoro timer. The unit of time is minutes."
+          },
+          "simple-pomodoro-timer.defaultShortBreakTime": {
+            "type": "number",
+            "default": 5,
+            "description": "This is the default short break time set for the pomodoro timer. The unit of time is minutes."
+          },
+          "simple-pomodoro-timer.defaultLongBreakTime": {
+            "type": "number",
+            "default": 15,
+            "description": "This is the default long break time set for the pomodoro timer. The unit of time is minutes."
+          },
+        }
+      }
+    ],
     "commands": [
       {
         "command": "pomodoro-timer.helloWorld",
