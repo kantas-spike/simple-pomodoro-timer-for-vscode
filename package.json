@@ -31,6 +31,21 @@
             "default": 15,
             "description": "This is the default long break time set for the pomodoro timer. The unit of time is minutes."
           },
+          "simple-pomodoro-timer.bellNameAtEndOfNormalWorking": {
+            "type": "string",
+            "default": "marimba02.mp3",
+            "description": "Audio file name of the bell at the end of the normal working."
+          },
+          "simple-pomodoro-timer.bellNameAtEndOfFourthWorking": {
+            "type": "string",
+            "default": "dora01.mp3",
+            "description": "Audio file name of the bell at the end of the fourth working."
+          },
+          "simple-pomodoro-timer.bellNameAtEndOfBreak": {
+            "type": "string",
+            "default": "cymbal01.mp3",
+            "description": "Audio file name of the bell at the end of the break."
+          }
         }
       }
     ],
