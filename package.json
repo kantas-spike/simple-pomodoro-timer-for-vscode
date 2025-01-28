@@ -51,8 +51,14 @@
     ],
     "commands": [
       {
-        "command": "pomodoro-timer.helloWorld",
-        "title": "Hello World"
+        "command": "pomodoro-timer.startTimer",
+        "title": "Start Timer",
+        "category": "Simple Pomodoro"
+      },
+      {
+        "command": "pomodoro-timer.stopTimer",
+        "title": "Stop Timer",
+        "category": "Simple Pomodoro"
       }
     ]
   },
