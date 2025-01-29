@@ -1,14 +1,72 @@
 import { PomodoroConfig } from './config';
 
 type EventHandler = (state: PomodoroState, interval: number) => void;
+type StateName = 'Working' | 'Break';
+interface InnerState {
+  init(): void;
+  incrementCycle(): void;
+  getIntervalMs(): number;
+  switch(): void;
+  getBellName(): string;
+}
+
+class WorkingState implements InnerState {
+  private state: PomodoroState;
+  constructor(state: PomodoroState) {
+    this.state = state;
+  }
+  getBellName(): string {
+    return this.state.cycleCount % 4 === 0
+      ? this.state.bellNameAtEndOfFourthWorking
+      : this.state.bellNameAtEndOfNormalWorking;
+  }
+  init(): void {
+    this.state.timerIcon = '🍅';
+  }
+  incrementCycle(): void {
+    this.state.cycleCount += 1;
+  }
+  getIntervalMs(): number {
+    return this.state.workingIntervalMs;
+  }
+  switch(): void {
+    this.state.currentState = 'Break';
+  }
+}
+
+class BreakState implements InnerState {
+  private state: PomodoroState;
+  constructor(state: PomodoroState) {
+    this.state = state;
+  }
+  getBellName(): string {
+    return this.state.bellNameAtEndOfBreak;
+  }
+  init(): void {
+    this.state.timerIcon = '🍆';
+  }
+  incrementCycle(): void {
+    return; // do nothing
+  }
+  getIntervalMs(): number {
+    return this.state.cycleCount % 4 === 0
+      ? this.state.longBreakIntervalMs
+      : this.state.shortBreakIntervalMs;
+  }
+  switch(): void {
+    this.state.currentState = 'Working';
+  }
+}
 
 export class PomodoroState {
   private timerIntervalMs = 1000;
   private timerDelayMs = 5 * 1000;
+  private stateMap: Map<StateName, InnerState>;
 
-  cycleCount: number = 0;
-  isWorking: boolean = false;
   taskDesc: string = '';
+
+  currentState: StateName = 'Break';
+  cycleCount: number = 0;
   timerIcon: '🍅' | '🍆' = '🍅';
   timerId: NodeJS.Timeout | null = null;
   targetEndTimeMs: number = 0;
@@ -16,6 +74,10 @@ export class PomodoroState {
   workingIntervalMs: number = 0;
   shortBreakIntervalMs: number = 0;
   longBreakIntervalMs: number = 0;
+
+  bellNameAtEndOfNormalWorking: string = '';
+  bellNameAtEndOfFourthWorking: string = '';
+  bellNameAtEndOfBreak: string = '';
 
   onTimerFinished: EventHandler = () => {};
   onTiked: EventHandler = () => {};
@@ -25,28 +87,31 @@ export class PomodoroState {
     workingIntervalMs: number,
     shortBreakIntervalMs: number,
     longBreakIntervalMs: number,
+    bellNameAtEndOfNormalWorking: string,
+    bellNameAtEndOfFourthWorking: string,
+    bellNameAtEndOfBreak: string,
   ) {
     this.workingIntervalMs = workingIntervalMs;
     this.shortBreakIntervalMs = shortBreakIntervalMs;
     this.longBreakIntervalMs = longBreakIntervalMs;
+
+    this.bellNameAtEndOfNormalWorking = bellNameAtEndOfNormalWorking;
+    this.bellNameAtEndOfFourthWorking = bellNameAtEndOfFourthWorking;
+    this.bellNameAtEndOfBreak = bellNameAtEndOfBreak;
+
+    this.reset();
+
+    this.stateMap = new Map<StateName, InnerState>();
+    this.stateMap.set('Working', new WorkingState(this));
+    this.stateMap.set('Break', new BreakState(this));
   }
 
   reset(): void {
+    this.currentState = 'Break';
     this.cycleCount = 0;
-    this.isWorking = false;
     this.timerIcon = '🍅';
     this.timerId = null;
     this.targetEndTimeMs = 0;
-  }
-
-  gotoBreak(): void {
-    this.isWorking = false;
-    this.timerIcon = '🍆';
-  }
-
-  gotoWorking(): void {
-    this.isWorking = true;
-    this.timerIcon = '🍅';
   }
 
   startInterval(): void {
@@ -74,10 +139,12 @@ export class PomodoroState {
     state.onTiked(state, interval);
   }
 
+  getCurrentState(): InnerState {
+    return this.stateMap.get(this.currentState)!;
+  }
+
   incrementCycleCount() {
-    if (this.isWorking) {
-      this.cycleCount += 1;
-    }
+    this.getCurrentState().incrementCycle();
   }
 
   timerFinished() {
@@ -90,21 +157,17 @@ export class PomodoroState {
   }
 
   getIntervalMs() {
-    if (this.isWorking) {
-      return this.workingIntervalMs;
-    } else {
-      return this.cycleCount % 4 === 0
-        ? this.longBreakIntervalMs
-        : this.shortBreakIntervalMs;
-    }
+    return this.getCurrentState().getIntervalMs();
+  }
+
+  getBellName() {
+    return this.getCurrentState().getBellName();
   }
 
   switchTimer() {
-    if (this.isWorking) {
-      this.gotoBreak();
-    } else {
-      this.gotoWorking();
-    }
+    this.getCurrentState().switch();
+    this.getCurrentState().init();
+
     const intervalMs = this.getIntervalMs();
     this.targetEndTimeMs = new Date().getTime() + intervalMs;
 

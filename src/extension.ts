@@ -40,21 +40,17 @@ export function activate(context: vscode.ExtensionContext) {
     config.workingTimeMs,
     config.shortBreakTimeMs,
     config.longBreakTimeMs,
+    config.bellNameAtEndOfNormalWorking,
+    config.bellNameAtEndOfFourthWorking,
+    config.bellNameAtEndOfBreak,
   );
   state.onTiked = (state, interval) => {
     updateStatusBar(state, interval);
   };
   state.onTimerFinished = (state, interval) => {
     updateStatusBar(state, interval);
-    if (state.isWorking) {
-      if (state.cycleCount % 4 === 0) {
-        player.play(config.bellNameAtEndOfFourthWorking);
-      } else {
-        player.play(config.bellNameAtEndOfNormalWorking);
-      }
-    } else {
-      player.play(config.bellNameAtEndOfBreak);
-    }
+    const bellName = state.getBellName();
+    player.play(bellName);
   };
   state.onStopped = (state, interval) => {
     updateStatusBar(state, null);
