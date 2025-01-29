@@ -13,4 +13,14 @@ function millisecToHHMM(ms: number | null): string {
   return `${min.padStart(2, '0')}:${sec.padStart(2, '0')}`;
 }
 
-export { millisecToHHMM };
+function taskNameFromLineText(lineText: string): string {
+  const trimedText = lineText.trim();
+  const regex = /^([-\+\*]|\d+\.)\s*(\[\s*\])\s*(.+)$/;
+  if (trimedText.match(regex)) {
+    return trimedText.replace(regex, '$1 $3');
+  } else {
+    return trimedText;
+  }
+}
+
+export { millisecToHHMM, taskNameFromLineText };
