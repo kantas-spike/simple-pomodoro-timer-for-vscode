@@ -184,7 +184,7 @@ export class PomodoroState {
 
   stopTimer() {
     this.clearInterval();
-    this.reset();
     this.onStopped(this, 0);
+    this.reset();
   }
 }

@@ -2,7 +2,7 @@
   "name": "simple-pomodoro-timer",
   "displayName": "Simple Pomodoro Timer",
   "description": "simple pomodoro timer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.96.0"
   },
