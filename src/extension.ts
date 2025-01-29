@@ -91,6 +91,34 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
   });
+  registerCommand(
+    context,
+    'pomodoro-timer.startTimerOnCurrentLine',
+    async () => {
+      let taskDesc = null;
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const currentLineText = editor.document.lineAt(
+          editor.selection.active.line,
+        ).text;
+        taskDesc = utils.taskNameFromLineText(currentLineText);
+      }
+
+      if (!taskDesc) {
+        const defaultValue = '未入力';
+        taskDesc = await vscode.window.showInputBox({
+          value: defaultValue,
+          prompt: 'やることを入力してください',
+        });
+      }
+      if (taskDesc) {
+        state.taskDesc = taskDesc;
+        state.start();
+      } else {
+        return;
+      }
+    },
+  );
   registerCommand(context, 'pomodoro-timer.stopTimer', () => {
     state.stopTimer();
   });
