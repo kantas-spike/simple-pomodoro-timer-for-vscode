@@ -13,11 +13,4 @@ function millisecToHHMM(ms: number | null): string {
   return `${min.padStart(2, '0')}:${sec.padStart(2, '0')}`;
 }
 
-function getAudioDirPath(
-  extensionPath: string,
-  audioDirName: string = 'audio',
-) {
-  return path.join(extensionPath, audioDirName);
-}
-
-export { millisecToHHMM, getAudioDirPath };
+export { millisecToHHMM };

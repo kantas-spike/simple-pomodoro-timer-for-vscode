@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import * as utils from '../../utils';
+import { PomodoroConfig } from '../../config';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -30,6 +31,16 @@ suite('Extension Test Suite', () => {
       15,
       config.get('simple-pomodoro-timer.defaultLongBreakTime'),
     );
+  });
+
+  test('PomodoroConfig', () => {
+    const config = new PomodoroConfig();
+    assert.strictEqual(25 * 60 * 1000, config.workingTimeMs);
+    assert.strictEqual(5 * 60 * 1000, config.shortBreakTimeMs);
+    assert.strictEqual(15 * 60 * 1000, config.longBreakTimeMs);
+    assert.strictEqual('marimba02.mp3', config.bellNameAtEndOfNormalWorking);
+    assert.strictEqual('dora01.mp3', config.bellNameAtEndOfFourthWorking);
+    assert.strictEqual('cymbal01.mp3', config.bellNameAtEndOfBreak);
   });
 
   test('Utils test', () => {
