@@ -39,11 +39,38 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(5 * 60 * 1000, config.shortBreakTimeMs);
     assert.strictEqual(15 * 60 * 1000, config.longBreakTimeMs);
     assert.strictEqual('marimba02.mp3', config.bellNameAtEndOfNormalWorking);
-    assert.strictEqual('dora01.mp3', config.bellNameAtEndOfFourthWorking);
+    assert.strictEqual('pulse01.mp3', config.bellNameAtEndOfFourthWorking);
     assert.strictEqual('cymbal01.mp3', config.bellNameAtEndOfBreak);
   });
 
-  test('Utils test', () => {
+  test('utils.taskNameFromLineText test', () => {
+    assert.strictEqual(
+      'abcd efg',
+      utils.taskNameFromLineText('    abcd efg    '),
+    );
+    assert.strictEqual(
+      '1. abcde',
+      utils.taskNameFromLineText('  1.  [ ]  abcde    '),
+    );
+    assert.strictEqual(
+      '99. abcde',
+      utils.taskNameFromLineText('  99.  [ ]  abcde    '),
+    );
+    assert.strictEqual(
+      '- abcde',
+      utils.taskNameFromLineText('  -  [ ]  abcde    '),
+    );
+    assert.strictEqual(
+      '+ abcde',
+      utils.taskNameFromLineText('  +  [ ]  abcde    '),
+    );
+    assert.strictEqual(
+      '* abcde',
+      utils.taskNameFromLineText('  *  [ ]  abcde    '),
+    );
+  });
+
+  test('utils.millisecToHHMM', () => {
     assert.strictEqual('00:01', utils.millisecToHHMM(1 * 1000));
     assert.strictEqual('00:10', utils.millisecToHHMM(10 * 1000));
     assert.strictEqual('01:01', utils.millisecToHHMM(61 * 1000));
