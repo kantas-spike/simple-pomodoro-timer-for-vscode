@@ -66,8 +66,16 @@ export function activate(context: vscode.ExtensionContext) {
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
   registerCommand(context, 'pomodoro-timer.startTimer', async () => {
+    let defaultValue = '未入力';
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const selectedText = editor.document.getText(editor.selection);
+      if (selectedText) {
+        defaultValue = selectedText;
+      }
+    }
     const result = await vscode.window.showInputBox({
-      value: '未入力',
+      value: defaultValue,
       prompt: 'やることを入力してください',
     });
     if (result) {
