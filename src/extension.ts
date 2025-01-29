@@ -52,8 +52,14 @@ export function activate(context: vscode.ExtensionContext) {
     const bellName = state.getBellName();
     player.play(bellName);
   };
-  state.onStopped = (state, interval) => {
+  state.onStarted = (state, _) => {
+    vscode.window.showInformationMessage(`${state.taskDesc}: 作業開始!!`);
+  };
+  state.onStopped = (state, _) => {
     updateStatusBar(state, null);
+    vscode.window.showInformationMessage(
+      `${state.taskDesc}: 作業停止!! 完了サイクル数: ${state.cycleCount}`,
+    );
   };
 
   statusBarItem = vscode.window.createStatusBarItem(
@@ -79,17 +85,13 @@ export function activate(context: vscode.ExtensionContext) {
       prompt: 'やることを入力してください',
     });
     if (result) {
-      taskDesc = result;
-      vscode.window.showInformationMessage(`${taskDesc}: 作業開始!!`);
-      state.switchTimer();
+      state.taskDesc = result;
+      state.start();
     } else {
       return;
     }
   });
   registerCommand(context, 'pomodoro-timer.stopTimer', () => {
-    vscode.window.showInformationMessage(
-      `${taskDesc}: 作業停止!! 完了サイクル数: ${state.cycleCount}`,
-    );
     state.stopTimer();
   });
 }

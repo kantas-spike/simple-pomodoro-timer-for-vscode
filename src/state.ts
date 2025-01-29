@@ -81,6 +81,7 @@ export class PomodoroState {
 
   onTimerFinished: EventHandler = () => {};
   onTiked: EventHandler = () => {};
+  onStarted: EventHandler = () => {};
   onStopped: EventHandler = () => {};
 
   constructor(
@@ -164,7 +165,12 @@ export class PomodoroState {
     return this.getCurrentState().getBellName();
   }
 
-  switchTimer() {
+  start() {
+    this.switchTimer();
+    this.onStarted(this, -1);
+  }
+
+  switchTimer(taskDesc: string | null = null) {
     this.getCurrentState().switch();
     this.getCurrentState().init();
 
