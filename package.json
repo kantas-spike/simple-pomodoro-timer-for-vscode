@@ -2,7 +2,7 @@
   "name": "simple-pomodoro-timer",
   "displayName": "Simple Pomodoro Timer",
   "description": "simple pomodoro timer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -38,7 +38,7 @@
           },
           "simple-pomodoro-timer.bellNameAtEndOfFourthWorking": {
             "type": "string",
-            "default": "dora01.mp3",
+            "default": "pulse01.mp3",
             "description": "Audio file name of the bell at the end of the fourth working."
           },
           "simple-pomodoro-timer.bellNameAtEndOfBreak": {
