@@ -3,8 +3,8 @@ import { PomodoroConfig } from './config';
 type EventHandler = (state: PomodoroState, interval: number) => void;
 
 export class PomodoroState {
-  TIMER_INTERVAL_MS = 1000;
-  TIMER_DELAY_MS = 5 * 1000;
+  private timerIntervalMs = 1000;
+  private timerDelayMs = 5 * 1000;
 
   cycleCount: number = 0;
   isWorking: boolean = false;
@@ -53,7 +53,7 @@ export class PomodoroState {
     this.clearInterval();
     this.timerId = setInterval(
       this.intervalCallback,
-      this.TIMER_INTERVAL_MS,
+      this.timerIntervalMs,
       this,
       this.targetEndTimeMs,
     );
@@ -86,7 +86,7 @@ export class PomodoroState {
     this.onTimerFinished(this, 0);
     setTimeout(() => {
       this.switchTimer();
-    }, this.TIMER_DELAY_MS);
+    }, this.timerDelayMs);
   }
 
   getIntervalMs() {

@@ -2,7 +2,7 @@ import * as path from 'path';
 const sound = require('sound-play');
 
 export class AudioPlayer {
-  private AUDIO_DIRNAME = 'audio';
+  private audioDirname = 'audio';
   private baseDir = '';
   constructor(baseDir: string) {
     this.baseDir = baseDir;
@@ -14,6 +14,6 @@ export class AudioPlayer {
   }
 
   private getAudioDirPath(audioFileName: string) {
-    return path.join(this.baseDir, this.AUDIO_DIRNAME, audioFileName);
+    return path.join(this.baseDir, this.audioDirname, audioFileName);
   }
 }
