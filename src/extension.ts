@@ -57,9 +57,11 @@ export function activate(context: vscode.ExtensionContext) {
   };
   state.onStopped = (state, _) => {
     updateStatusBar(state, null);
-    vscode.window.showInformationMessage(
-      `${state.taskDesc}: 作業停止!! 完了サイクル数: ${state.cycleCount}`,
-    );
+    if (state.timerId) {
+      vscode.window.showInformationMessage(
+        `${state.taskDesc}: 作業停止!! 完了サイクル数: ${state.cycleCount}`,
+      );
+    }
   };
 
   statusBarItem = vscode.window.createStatusBarItem(
