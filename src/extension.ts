@@ -87,8 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
       prompt: 'やることを入力してください',
     });
     if (result) {
-      state.taskDesc = result;
-      state.start();
+      state.startTimer(result);
     } else {
       return;
     }
@@ -114,8 +113,7 @@ export function activate(context: vscode.ExtensionContext) {
         });
       }
       if (taskDesc) {
-        state.taskDesc = taskDesc;
-        state.start();
+        state.startTimer(taskDesc);
       } else {
         return;
       }

@@ -116,7 +116,6 @@ export class PomodoroState {
   }
 
   startInterval(): void {
-    this.clearInterval();
     this.timerId = setInterval(
       this.intervalCallback,
       this.timerIntervalMs,
@@ -165,7 +164,11 @@ export class PomodoroState {
     return this.getCurrentState().getBellName();
   }
 
-  start() {
+  startTimer(taskName: string) {
+    if (this.timerId) {
+      this.stopTimer();
+    }
+    this.taskDesc = taskName;
     this.switchTimer();
     this.onStarted(this, -1);
   }
