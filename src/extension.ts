@@ -53,13 +53,17 @@ export function activate(context: vscode.ExtensionContext) {
     player.play(bellName);
   };
   state.onStarted = (state, _) => {
-    vscode.window.showInformationMessage(`${state.taskDesc}: 作業開始!!`);
+    const now = new Date().toLocaleString('ja-JP');
+    vscode.window.showInformationMessage(`${now} [start] ${state.taskDesc}`);
   };
   state.onStopped = (state, _) => {
     updateStatusBar(state, null);
-    vscode.window.showInformationMessage(
-      `${state.taskDesc}: 作業停止!! 完了サイクル数: ${state.cycleCount}`,
-    );
+    if (state.timerId) {
+      const now = new Date().toLocaleString('ja-JP');
+      vscode.window.showInformationMessage(
+        `${now} [stop(cycle: ${state.cycleCount})] ${state.taskDesc} `,
+      );
+    }
   };
 
   statusBarItem = vscode.window.createStatusBarItem(
@@ -85,8 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
       prompt: 'やることを入力してください',
     });
     if (result) {
-      state.taskDesc = result;
-      state.start();
+      state.startTimer(result);
     } else {
       return;
     }
@@ -112,8 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
         });
       }
       if (taskDesc) {
-        state.taskDesc = taskDesc;
-        state.start();
+        state.startTimer(taskDesc);
       } else {
         return;
       }
