@@ -31,6 +31,11 @@
             "default": 15,
             "description": "This is the default long break time set for the pomodoro timer. The unit of time is minutes."
           },
+          "simple-pomodoro-timer.audioDir": {
+            "type": "string",
+            "default": null,
+            "description": "Path to the directory containing the audio files."
+          },
           "simple-pomodoro-timer.bellNameAtEndOfNormalWorking": {
             "type": "string",
             "default": "marimba02.mp3",
