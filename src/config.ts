@@ -53,6 +53,15 @@ export class PomodoroConfig {
     return this.config.get('bellNameAtEndOfBreak', this.DEFAULT_BELL_FILENAME);
   }
 
+  getAudioDir(extensionPath: string): string {
+    const adir = this.config.get('audioDir', null);
+    if (adir) {
+      return adir;
+    } else {
+      return path.join(extensionPath, 'audio');
+    }
+  }
+
   private minutesToMillisec(key: string, defaultvalue: number): number {
     return this.config.get<number>(key, defaultvalue) * 60 * 1000;
   }
