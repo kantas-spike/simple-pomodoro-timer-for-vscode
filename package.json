@@ -60,6 +60,16 @@
             "type": "string",
             "default": "🍆",
             "description": "Timer icon for break."
+          },
+          "simple-pomodoro-timer.statusbarAlignment": {
+            "type": "string",
+            "default": "right",
+            "description": "Set the position (left or right) to place the timer on the status bar."
+          },
+          "simple-pomodoro-timer.statusbarPriority": {
+            "type": "number",
+            "default": -100,
+            "description": "The priority of displaying the timer in the status bar. A higher value means the item will appear further to the left."
           }
         }
       }

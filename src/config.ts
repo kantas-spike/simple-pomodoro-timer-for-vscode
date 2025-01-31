@@ -10,6 +10,8 @@ export class PomodoroConfig {
   private DEFAULT_BELL_FILENAME = 'marimba01.mp3';
   private DEFAULT_TIMER_ICON_WORKING = '🍅';
   private DEFAULT_TIMER_ICON_BREAK = '🍆';
+  private DEFAULT_TIMER_ALIGNMENT = 'right';
+  private DEFAULT_TIMER_PRIORITY = -100;
   private config: vscode.WorkspaceConfiguration;
 
   constructor() {
@@ -64,6 +66,21 @@ export class PomodoroConfig {
 
   get timerIconForBreak(): string {
     return this.config.get('timerIconForBreak', this.DEFAULT_TIMER_ICON_BREAK);
+  }
+
+  get statusbarAlignment(): vscode.StatusBarAlignment {
+    const align = this.config
+      .get('statusbarAlignment', this.DEFAULT_TIMER_ALIGNMENT)
+      .toLowerCase();
+    if (align === 'left') {
+      return vscode.StatusBarAlignment.Left;
+    } else {
+      return vscode.StatusBarAlignment.Right;
+    }
+  }
+
+  get statusbarPriority(): number {
+    return this.config.get('statusbarPriority', this.DEFAULT_TIMER_PRIORITY);
   }
 
   getAudioDir(extensionPath: string): string {
