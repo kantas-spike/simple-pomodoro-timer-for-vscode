@@ -35,7 +35,7 @@ function registerCommand(
 export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  const player = new AudioPlayer(context.extensionPath);
+  const player = new AudioPlayer(config.getAudioDir(context.extensionPath));
   const state = new PomodoroState(
     config.workingTimeMs,
     config.shortBreakTimeMs,
@@ -43,6 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
     config.bellNameAtEndOfNormalWorking,
     config.bellNameAtEndOfFourthWorking,
     config.bellNameAtEndOfBreak,
+    config.timerIconForWroking,
+    config.timerIconForBreak,
+    config.delayTimeWhenSwitchTimer,
   );
   state.onTiked = (state, interval) => {
     updateStatusBar(state, interval);
@@ -67,8 +70,8 @@ export function activate(context: vscode.ExtensionContext) {
   };
 
   statusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
-    100,
+    config.statusbarAlignment,
+    config.statusbarPriority,
   );
   updateStatusBar(state, 0);
 

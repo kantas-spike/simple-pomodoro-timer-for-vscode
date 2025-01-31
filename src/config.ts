@@ -8,6 +8,11 @@ export class PomodoroConfig {
   private DEFAULT_LONG_BREAK_TIME_MIN = 15;
   private DEFAULT_SHORT_BREAK_TIME_MIN = 5;
   private DEFAULT_BELL_FILENAME = 'marimba01.mp3';
+  private DEFAULT_TIMER_ICON_WORKING = '🍅';
+  private DEFAULT_TIMER_ICON_BREAK = '🍆';
+  private DEFAULT_TIMER_ALIGNMENT = 'right';
+  private DEFAULT_TIMER_PRIORITY = -100;
+  private DEFAULT_DELAY_TIME_SEC = 3;
   private config: vscode.WorkspaceConfiguration;
 
   constructor() {
@@ -51,6 +56,48 @@ export class PomodoroConfig {
 
   get bellNameAtEndOfBreak(): string {
     return this.config.get('bellNameAtEndOfBreak', this.DEFAULT_BELL_FILENAME);
+  }
+
+  get timerIconForWroking(): string {
+    return this.config.get(
+      'timerIconForWorking',
+      this.DEFAULT_TIMER_ICON_WORKING,
+    );
+  }
+
+  get timerIconForBreak(): string {
+    return this.config.get('timerIconForBreak', this.DEFAULT_TIMER_ICON_BREAK);
+  }
+
+  get statusbarAlignment(): vscode.StatusBarAlignment {
+    const align = this.config
+      .get('statusbarAlignment', this.DEFAULT_TIMER_ALIGNMENT)
+      .toLowerCase();
+    if (align === 'left') {
+      return vscode.StatusBarAlignment.Left;
+    } else {
+      return vscode.StatusBarAlignment.Right;
+    }
+  }
+
+  get statusbarPriority(): number {
+    return this.config.get('statusbarPriority', this.DEFAULT_TIMER_PRIORITY);
+  }
+
+  get delayTimeWhenSwitchTimer(): number {
+    return this.config.get(
+      'delayTimeWhenSwitchTimer',
+      this.DEFAULT_DELAY_TIME_SEC,
+    );
+  }
+
+  getAudioDir(extensionPath: string): string {
+    const adir = this.config.get('audioDir', null);
+    if (adir) {
+      return adir;
+    } else {
+      return path.join(extensionPath, 'audio');
+    }
   }
 
   private minutesToMillisec(key: string, defaultvalue: number): number {

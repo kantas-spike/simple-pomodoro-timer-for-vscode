@@ -31,6 +31,7 @@ suite('Extension Test Suite', () => {
       15,
       config.get('simple-pomodoro-timer.defaultLongBreakTime'),
     );
+    assert.strictEqual(null, config.get('simple-pomodoro-timer.audioDir'));
   });
 
   test('PomodoroConfig', () => {
