@@ -70,6 +70,11 @@
             "type": "number",
             "default": -100,
             "description": "The priority of displaying the timer in the status bar. A higher value means the item will appear further to the left."
+          },
+          "simple-pomodoro-timer.delayTimeWhenSwitchTimer": {
+            "type": "number",
+            "default": 3,
+            "description": "Delay time(sec) when switching timers."
           }
         }
       }

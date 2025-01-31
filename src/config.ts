@@ -12,6 +12,7 @@ export class PomodoroConfig {
   private DEFAULT_TIMER_ICON_BREAK = '🍆';
   private DEFAULT_TIMER_ALIGNMENT = 'right';
   private DEFAULT_TIMER_PRIORITY = -100;
+  private DEFAULT_DELAY_TIME_SEC = 3;
   private config: vscode.WorkspaceConfiguration;
 
   constructor() {
@@ -81,6 +82,13 @@ export class PomodoroConfig {
 
   get statusbarPriority(): number {
     return this.config.get('statusbarPriority', this.DEFAULT_TIMER_PRIORITY);
+  }
+
+  get delayTimeWhenSwitchTimer(): number {
+    return this.config.get(
+      'delayTimeWhenSwitchTimer',
+      this.DEFAULT_DELAY_TIME_SEC,
+    );
   }
 
   getAudioDir(extensionPath: string): string {

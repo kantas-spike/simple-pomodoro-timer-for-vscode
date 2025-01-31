@@ -45,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
     config.bellNameAtEndOfBreak,
     config.timerIconForWroking,
     config.timerIconForBreak,
+    config.delayTimeWhenSwitchTimer,
   );
   state.onTiked = (state, interval) => {
     updateStatusBar(state, interval);

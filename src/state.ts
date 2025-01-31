@@ -60,7 +60,7 @@ class BreakState implements InnerState {
 
 export class PomodoroState {
   private timerIntervalMs = 1000;
-  private timerDelayMs = 5 * 1000;
+  private timerDelayMs = 0;
   private stateMap: Map<StateName, InnerState>;
 
   taskDesc: string = '';
@@ -96,6 +96,7 @@ export class PomodoroState {
     bellNameAtEndOfBreak: string,
     timerIconForWorking: string,
     timerIconForBreak: string,
+    delayTimeSec: number,
   ) {
     this.workingIntervalMs = workingIntervalMs;
     this.shortBreakIntervalMs = shortBreakIntervalMs;
@@ -107,6 +108,8 @@ export class PomodoroState {
 
     this.timerIconForWorking = timerIconForWorking;
     this.timerIconForBreak = timerIconForBreak;
+
+    this.timerDelayMs = delayTimeSec * 1000;
 
     this.reset();
 
