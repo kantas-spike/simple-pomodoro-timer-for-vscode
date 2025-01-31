@@ -21,7 +21,7 @@ class WorkingState implements InnerState {
       : this.state.bellNameAtEndOfNormalWorking;
   }
   init(): void {
-    this.state.timerIcon = '🍅';
+    this.state.timerIcon = this.state.timerIconForWorking;
   }
   incrementCycle(): void {
     this.state.cycleCount += 1;
@@ -43,7 +43,7 @@ class BreakState implements InnerState {
     return this.state.bellNameAtEndOfBreak;
   }
   init(): void {
-    this.state.timerIcon = '🍆';
+    this.state.timerIcon = this.state.timerIconForBreak;
   }
   incrementCycle(): void {
     return; // do nothing
@@ -67,7 +67,7 @@ export class PomodoroState {
 
   currentState: StateName = 'Break';
   cycleCount: number = 0;
-  timerIcon: '🍅' | '🍆' = '🍅';
+  timerIcon: string = '';
   timerId: NodeJS.Timeout | null = null;
   targetEndTimeMs: number = 0;
 
@@ -78,6 +78,9 @@ export class PomodoroState {
   bellNameAtEndOfNormalWorking: string = '';
   bellNameAtEndOfFourthWorking: string = '';
   bellNameAtEndOfBreak: string = '';
+
+  timerIconForWorking = '';
+  timerIconForBreak = '';
 
   onTimerFinished: EventHandler = () => {};
   onTiked: EventHandler = () => {};
@@ -91,6 +94,8 @@ export class PomodoroState {
     bellNameAtEndOfNormalWorking: string,
     bellNameAtEndOfFourthWorking: string,
     bellNameAtEndOfBreak: string,
+    timerIconForWorking: string,
+    timerIconForBreak: string,
   ) {
     this.workingIntervalMs = workingIntervalMs;
     this.shortBreakIntervalMs = shortBreakIntervalMs;
@@ -99,6 +104,9 @@ export class PomodoroState {
     this.bellNameAtEndOfNormalWorking = bellNameAtEndOfNormalWorking;
     this.bellNameAtEndOfFourthWorking = bellNameAtEndOfFourthWorking;
     this.bellNameAtEndOfBreak = bellNameAtEndOfBreak;
+
+    this.timerIconForWorking = timerIconForWorking;
+    this.timerIconForBreak = timerIconForBreak;
 
     this.reset();
 
@@ -110,7 +118,7 @@ export class PomodoroState {
   reset(): void {
     this.currentState = 'Break';
     this.cycleCount = 0;
-    this.timerIcon = '🍅';
+    this.timerIcon = this.timerIconForWorking;
     this.timerId = null;
     this.targetEndTimeMs = 0;
   }

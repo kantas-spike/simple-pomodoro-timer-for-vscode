@@ -43,6 +43,8 @@ export function activate(context: vscode.ExtensionContext) {
     config.bellNameAtEndOfNormalWorking,
     config.bellNameAtEndOfFourthWorking,
     config.bellNameAtEndOfBreak,
+    config.timerIconForWroking,
+    config.timerIconForBreak,
   );
   state.onTiked = (state, interval) => {
     updateStatusBar(state, interval);

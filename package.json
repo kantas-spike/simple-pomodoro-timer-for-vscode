@@ -50,6 +50,16 @@
             "type": "string",
             "default": "cymbal01.mp3",
             "description": "Audio file name of the bell at the end of the break."
+          },
+          "simple-pomodoro-timer.timerIconForWorking": {
+            "type": "string",
+            "default": "🍅",
+            "description": "Timer icon for working."
+          },
+          "simple-pomodoro-timer.timerIconForBreak": {
+            "type": "string",
+            "default": "🍆",
+            "description": "Timer icon for break."
           }
         }
       }

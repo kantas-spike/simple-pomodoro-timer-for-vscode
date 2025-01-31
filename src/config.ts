@@ -8,6 +8,8 @@ export class PomodoroConfig {
   private DEFAULT_LONG_BREAK_TIME_MIN = 15;
   private DEFAULT_SHORT_BREAK_TIME_MIN = 5;
   private DEFAULT_BELL_FILENAME = 'marimba01.mp3';
+  private DEFAULT_TIMER_ICON_WORKING = '🍅';
+  private DEFAULT_TIMER_ICON_BREAK = '🍆';
   private config: vscode.WorkspaceConfiguration;
 
   constructor() {
@@ -51,6 +53,17 @@ export class PomodoroConfig {
 
   get bellNameAtEndOfBreak(): string {
     return this.config.get('bellNameAtEndOfBreak', this.DEFAULT_BELL_FILENAME);
+  }
+
+  get timerIconForWroking(): string {
+    return this.config.get(
+      'timerIconForWorking',
+      this.DEFAULT_TIMER_ICON_WORKING,
+    );
+  }
+
+  get timerIconForBreak(): string {
+    return this.config.get('timerIconForBreak', this.DEFAULT_TIMER_ICON_BREAK);
   }
 
   getAudioDir(extensionPath: string): string {
