@@ -2,6 +2,11 @@
   "name": "simple-pomodoro-timer",
   "displayName": "Simple Pomodoro Timer",
   "description": "simple pomodoro timer",
+  "author": {
+    "name": "kantas-spike"
+  },
+  "license": "MIT",
+  "repository": "github:kantas-spike/simple-pomodoro-timer",
   "version": "0.0.5",
   "engines": {
     "vscode": "^1.96.0"
@@ -114,9 +119,10 @@
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "@vscode/test-electron": "^2.3.4",
-    "@vscode/vsce": "^3.2.1",
+    "@vscode/vsce": "^3.2.2",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^10.0.1",
+    "generator-license": "^5.7.1",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
     "prettier": "^3.4.2",
