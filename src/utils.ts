@@ -34,4 +34,36 @@ function taskNameFromTitleLineText(lineText: string): string {
   }
 }
 
-export { millisecToHHMM, taskNameFromTodoLineText, taskNameFromTitleLineText };
+type NotificationMessageSupportedKey =
+  | '@time@'
+  | '@taskName@'
+  | '@projectName@'
+  | '@message@';
+type NotificationMessageKV = {
+  [key in NotificationMessageSupportedKey]: string | undefined;
+};
+
+function getNotificationMessage(
+  formatString: string,
+  obj: NotificationMessageKV,
+) {
+  /*
+  @time@: 時刻
+  @taskName@: タスク名
+  @projectName@: プロジェクト名
+  @message@: 通知メッセージ
+   */
+  let result = formatString;
+  for (const [k, v] of Object.entries(obj)) {
+    console.log(result, k, v);
+    result = result.replace(k, v || '');
+  }
+  return result;
+}
+
+export {
+  millisecToHHMM,
+  taskNameFromTodoLineText,
+  taskNameFromTitleLineText,
+  getNotificationMessage,
+};

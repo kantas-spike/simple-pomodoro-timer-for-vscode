@@ -89,4 +89,33 @@ suite('Extension Test Suite', () => {
       utils.taskNameFromTitleLineText('title = "コマンド改善"'),
     );
   });
+
+  test('utils.getNotificationMessage', () => {
+    assert.strictEqual(
+      utils.getNotificationMessage(
+        '@time@ [@projectName@] @taskName@ - @message@',
+        {
+          '@time@': '2025/02/04 05:54:00',
+          '@taskName@': 'テストタスク',
+          '@projectName@': 'テストプロジェクト',
+          '@message@': 'テストメッセージ',
+        },
+      ),
+      '2025/02/04 05:54:00 [テストプロジェクト] テストタスク - テストメッセージ',
+      '@time@: [@projectName@] @taskName@ - @message@',
+    );
+    assert.strictEqual(
+      utils.getNotificationMessage(
+        '@time@ [@projectName@] @taskName@ - @message@',
+        {
+          '@time@': '2025/02/04 05:54:00',
+          '@projectName@': 'テスト',
+          '@message@': undefined,
+          '@taskName@': undefined,
+        },
+      ),
+      '2025/02/04 05:54:00 [テスト]  - ',
+      '@time@: [@projectName@] @taskName@ - @message@',
+    );
+  });
 });
