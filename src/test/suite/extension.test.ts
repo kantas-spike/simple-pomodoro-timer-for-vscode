@@ -20,54 +20,55 @@ suite('Extension Test Suite', () => {
       vscode.workspace.getConfiguration();
     console.log('@@@' + config.get('simple-pomodoro-timer.defaultWorkingTime'));
     assert.strictEqual(
-      25,
+      0.2,
       config.get('simple-pomodoro-timer.defaultWorkingTime'),
     );
     assert.strictEqual(
-      5,
+      0.1,
       config.get('simple-pomodoro-timer.defaultShortBreakTime'),
     );
     assert.strictEqual(
-      15,
+      0.3,
       config.get('simple-pomodoro-timer.defaultLongBreakTime'),
+      'aaa',
     );
     assert.strictEqual(null, config.get('simple-pomodoro-timer.audioDir'));
   });
 
   test('PomodoroConfig', () => {
     const config = new PomodoroConfig();
-    assert.strictEqual(25 * 60 * 1000, config.workingTimeMs);
-    assert.strictEqual(5 * 60 * 1000, config.shortBreakTimeMs);
-    assert.strictEqual(15 * 60 * 1000, config.longBreakTimeMs);
+    assert.strictEqual(0.2 * 60 * 1000, config.workingTimeMs);
+    assert.strictEqual(0.1 * 60 * 1000, config.shortBreakTimeMs);
+    assert.strictEqual(0.3 * 60 * 1000, config.longBreakTimeMs);
     assert.strictEqual('marimba02.mp3', config.bellNameAtEndOfNormalWorking);
     assert.strictEqual('pulse01.mp3', config.bellNameAtEndOfFourthWorking);
     assert.strictEqual('cymbal01.mp3', config.bellNameAtEndOfBreak);
   });
 
-  test('utils.taskNameFromLineText test', () => {
+  test('utils.taskNameFromTodoLineText test', () => {
     assert.strictEqual(
       'abcd efg',
-      utils.taskNameFromLineText('    abcd efg    '),
+      utils.taskNameFromTodoLineText('    abcd efg    '),
     );
     assert.strictEqual(
       '1. abcde',
-      utils.taskNameFromLineText('  1.  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  1.  [ ]  abcde    '),
     );
     assert.strictEqual(
       '99. abcde',
-      utils.taskNameFromLineText('  99.  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  99.  [ ]  abcde    '),
     );
     assert.strictEqual(
       '- abcde',
-      utils.taskNameFromLineText('  -  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  -  [ ]  abcde    '),
     );
     assert.strictEqual(
       '+ abcde',
-      utils.taskNameFromLineText('  +  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  +  [ ]  abcde    '),
     );
     assert.strictEqual(
       '* abcde',
-      utils.taskNameFromLineText('  *  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  *  [ ]  abcde    '),
     );
   });
 
@@ -76,5 +77,45 @@ suite('Extension Test Suite', () => {
     assert.strictEqual('00:10', utils.millisecToHHMM(10 * 1000));
     assert.strictEqual('01:01', utils.millisecToHHMM(61 * 1000));
     assert.strictEqual('10:10', utils.millisecToHHMM(610 * 1000));
+  });
+
+  test('utils.taskNameFromTitleLineText', () => {
+    assert.strictEqual(
+      'コマンド改善',
+      utils.taskNameFromTitleLineText("title = 'コマンド改善'"),
+    );
+    assert.strictEqual(
+      'コマンド改善',
+      utils.taskNameFromTitleLineText('title = "コマンド改善"'),
+    );
+  });
+
+  test('utils.getNotificationMessage', () => {
+    assert.strictEqual(
+      utils.getNotificationMessage(
+        '@time@ [@projectName@] @taskName@ - @message@',
+        {
+          '@time@': '2025/02/04 05:54:00',
+          '@taskName@': 'テストタスク',
+          '@projectName@': 'テストプロジェクト',
+          '@message@': 'テストメッセージ',
+        },
+      ),
+      '2025/02/04 05:54:00 [テストプロジェクト] テストタスク - テストメッセージ',
+      '@time@: [@projectName@] @taskName@ - @message@',
+    );
+    assert.strictEqual(
+      utils.getNotificationMessage(
+        '@time@ [@projectName@] @taskName@ - @message@',
+        {
+          '@time@': '2025/02/04 05:54:00',
+          '@projectName@': 'テスト',
+          '@message@': undefined,
+          '@taskName@': undefined,
+        },
+      ),
+      '2025/02/04 05:54:00 [テスト]  - ',
+      '@time@: [@projectName@] @taskName@ - @message@',
+    );
   });
 });
