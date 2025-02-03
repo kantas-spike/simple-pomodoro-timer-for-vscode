@@ -80,6 +80,16 @@
             "type": "number",
             "default": 3,
             "description": "Delay time(sec) when switching timers."
+          },
+          "simple-pomodoro-timer.startMessgeFormat": {
+            "type": "string",
+            "default": "@time@ [start] @projectName@ @taskName@ @message@",
+            "description": "Notification message format when timer started."
+          },
+          "simple-pomodoro-timer.stoptMessgeFormat": {
+            "type": "string",
+            "default": "@time@ [stop] @projectName@ @taskName@ @message@",
+            "description": "Notification message format when timer stopped."
           }
         }
       }

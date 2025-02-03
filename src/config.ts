@@ -13,6 +13,11 @@ export class PomodoroConfig {
   private DEFAULT_TIMER_ALIGNMENT = 'right';
   private DEFAULT_TIMER_PRIORITY = -100;
   private DEFAULT_DELAY_TIME_SEC = 3;
+  private DEFAULT_START_MESSAGE_FORMAT =
+    '@time@ [start] @projectName@ @taskName@ @message@';
+  private DEFAULT_STOP_MESSAGE_FORMAT =
+    '@time@ [stop] @projectName@ @taskName@ @message@';
+
   private config: vscode.WorkspaceConfiguration;
 
   constructor() {
@@ -88,6 +93,20 @@ export class PomodoroConfig {
     return this.config.get(
       'delayTimeWhenSwitchTimer',
       this.DEFAULT_DELAY_TIME_SEC,
+    );
+  }
+
+  get startMessgeFormat(): string {
+    return this.config.get(
+      'startMessgeFormat',
+      this.DEFAULT_START_MESSAGE_FORMAT,
+    );
+  }
+
+  get stopMessgeFormat(): string {
+    return this.config.get(
+      'stopMessgeFormat',
+      this.DEFAULT_STOP_MESSAGE_FORMAT,
     );
   }
 
