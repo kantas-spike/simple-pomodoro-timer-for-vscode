@@ -107,7 +107,7 @@ export function activate(context: vscode.ExtensionContext) {
         const currentLineText = editor.document.lineAt(
           editor.selection.active.line,
         ).text;
-        taskDesc = utils.taskNameFromLineText(currentLineText);
+        taskDesc = utils.taskNameFromTitleLineText(currentLineText);
       }
 
       if (!taskDesc) {
