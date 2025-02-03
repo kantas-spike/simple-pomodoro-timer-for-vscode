@@ -20,15 +20,15 @@ suite('Extension Test Suite', () => {
       vscode.workspace.getConfiguration();
     console.log('@@@' + config.get('simple-pomodoro-timer.defaultWorkingTime'));
     assert.strictEqual(
-      25,
+      0.2,
       config.get('simple-pomodoro-timer.defaultWorkingTime'),
     );
     assert.strictEqual(
-      5,
+      0.1,
       config.get('simple-pomodoro-timer.defaultShortBreakTime'),
     );
     assert.strictEqual(
-      15,
+      0.3,
       config.get('simple-pomodoro-timer.defaultLongBreakTime'),
       'aaa',
     );
@@ -37,9 +37,9 @@ suite('Extension Test Suite', () => {
 
   test('PomodoroConfig', () => {
     const config = new PomodoroConfig();
-    assert.strictEqual(25 * 60 * 1000, config.workingTimeMs);
-    assert.strictEqual(5 * 60 * 1000, config.shortBreakTimeMs);
-    assert.strictEqual(15 * 60 * 1000, config.longBreakTimeMs);
+    assert.strictEqual(0.2 * 60 * 1000, config.workingTimeMs);
+    assert.strictEqual(0.1 * 60 * 1000, config.shortBreakTimeMs);
+    assert.strictEqual(0.3 * 60 * 1000, config.longBreakTimeMs);
     assert.strictEqual('marimba02.mp3', config.bellNameAtEndOfNormalWorking);
     assert.strictEqual('pulse01.mp3', config.bellNameAtEndOfFourthWorking);
     assert.strictEqual('cymbal01.mp3', config.bellNameAtEndOfBreak);
