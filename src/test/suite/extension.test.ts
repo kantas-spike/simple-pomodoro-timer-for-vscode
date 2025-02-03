@@ -30,6 +30,7 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(
       15,
       config.get('simple-pomodoro-timer.defaultLongBreakTime'),
+      'aaa',
     );
     assert.strictEqual(null, config.get('simple-pomodoro-timer.audioDir'));
   });
@@ -44,30 +45,30 @@ suite('Extension Test Suite', () => {
     assert.strictEqual('cymbal01.mp3', config.bellNameAtEndOfBreak);
   });
 
-  test('utils.taskNameFromLineText test', () => {
+  test('utils.taskNameFromTodoLineText test', () => {
     assert.strictEqual(
       'abcd efg',
-      utils.taskNameFromLineText('    abcd efg    '),
+      utils.taskNameFromTodoLineText('    abcd efg    '),
     );
     assert.strictEqual(
       '1. abcde',
-      utils.taskNameFromLineText('  1.  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  1.  [ ]  abcde    '),
     );
     assert.strictEqual(
       '99. abcde',
-      utils.taskNameFromLineText('  99.  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  99.  [ ]  abcde    '),
     );
     assert.strictEqual(
       '- abcde',
-      utils.taskNameFromLineText('  -  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  -  [ ]  abcde    '),
     );
     assert.strictEqual(
       '+ abcde',
-      utils.taskNameFromLineText('  +  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  +  [ ]  abcde    '),
     );
     assert.strictEqual(
       '* abcde',
-      utils.taskNameFromLineText('  *  [ ]  abcde    '),
+      utils.taskNameFromTodoLineText('  *  [ ]  abcde    '),
     );
   });
 
@@ -76,5 +77,16 @@ suite('Extension Test Suite', () => {
     assert.strictEqual('00:10', utils.millisecToHHMM(10 * 1000));
     assert.strictEqual('01:01', utils.millisecToHHMM(61 * 1000));
     assert.strictEqual('10:10', utils.millisecToHHMM(610 * 1000));
+  });
+
+  test('utils.taskNameFromTitleLineText', () => {
+    assert.strictEqual(
+      'コマンド改善',
+      utils.taskNameFromTitleLineText("title = 'コマンド改善'"),
+    );
+    assert.strictEqual(
+      'コマンド改善',
+      utils.taskNameFromTitleLineText('title = "コマンド改善"'),
+    );
   });
 });
