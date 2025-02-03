@@ -56,16 +56,28 @@ export function activate(context: vscode.ExtensionContext) {
     player.play(bellName);
   };
   state.onStarted = (state, _) => {
+    const format = config.startMessgeFormat;
     const now = new Date().toLocaleString('ja-JP');
-    vscode.window.showInformationMessage(`${now} [start] ${state.taskDesc}`);
+    const message = utils.getNotificationMessage(format, {
+      '@time@': now,
+      '@taskName@': state.taskDesc,
+      '@projectName@': undefined,
+      '@message@': undefined,
+    });
+    vscode.window.showInformationMessage(message);
   };
   state.onStopped = (state, _) => {
     updateStatusBar(state, null);
     if (state.timerId) {
+      const format = config.stopMessgeFormat;
       const now = new Date().toLocaleString('ja-JP');
-      vscode.window.showInformationMessage(
-        `${now} [stop(cycle: ${state.cycleCount})] ${state.taskDesc} `,
-      );
+      const message = utils.getNotificationMessage(format, {
+        '@time@': now,
+        '@taskName@': state.taskDesc,
+        '@projectName@': undefined,
+        '@message@': undefined,
+      });
+      vscode.window.showInformationMessage(message);
     }
   };
 
@@ -78,30 +90,33 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  registerCommand(context, 'pomodoro-timer.startTimer', async () => {
-    let defaultValue = '未入力';
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      const selectedText = editor.document.getText(editor.selection);
-      if (selectedText) {
-        defaultValue = selectedText;
+  registerCommand(
+    context,
+    'pomodoro-timer.startTimer',
+    async (projectName: string | undefined) => {
+      let defaultValue = '未入力';
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const selectedText = editor.document.getText(editor.selection);
+        if (selectedText) {
+          defaultValue = selectedText;
+        }
       }
-    }
-    const result = await vscode.window.showInputBox({
-      value: defaultValue,
-      prompt: 'やることを入力してください',
-    });
-    if (result) {
-      state.startTimer(result);
-    } else {
-      return;
-    }
-  });
+      const result = await vscode.window.showInputBox({
+        value: defaultValue,
+        prompt: 'やることを入力してください',
+      });
+      if (result) {
+        state.startTimer(result);
+      } else {
+        return;
+      }
+    },
+  );
   registerCommand(
     context,
     'pomodoro-timer.startTimerOnCurrentLine',
-    async () => {
-      let taskDesc = null;
+    async (taskDesc: string | undefined, projectName: string | undefined) => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
         const currentLineText = editor.document.lineAt(
