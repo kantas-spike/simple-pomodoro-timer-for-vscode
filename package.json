@@ -63,7 +63,7 @@
           },
           "simple-pomodoro-timer.timerIconForBreak": {
             "type": "string",
-            "default": "🍆",
+            "default": "🥔",
             "description": "Timer icon for break."
           },
           "simple-pomodoro-timer.statusbarAlignment": {
