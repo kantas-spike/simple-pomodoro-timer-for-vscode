@@ -55,28 +55,30 @@ suite('Extension Test Suite', () => {
   test('utils.getNotificationMessage', () => {
     assert.strictEqual(
       utils.getNotificationMessage(
-        '@time@ [@projectName@] @taskName@ - @message@',
+        '@time@ [@projectName@] @taskName@(@cycleCount@) - @message@',
         {
           '@time@': '2025/02/04 05:54:00',
           '@taskName@': 'テストタスク',
           '@projectName@': 'テストプロジェクト',
+          '@cycleCount@': String(2),
           '@message@': 'テストメッセージ',
         },
       ),
-      '2025/02/04 05:54:00 [テストプロジェクト] テストタスク - テストメッセージ',
+      '2025/02/04 05:54:00 [テストプロジェクト] テストタスク(2) - テストメッセージ',
       '@time@: [@projectName@] @taskName@ - @message@',
     );
     assert.strictEqual(
       utils.getNotificationMessage(
-        '@time@ [@projectName@] @taskName@ - @message@',
+        '@time@ [@projectName@] @taskName@(@cycleCount@) - @message@',
         {
           '@time@': '2025/02/04 05:54:00',
           '@projectName@': 'テスト',
+          '@cycleCount@': undefined,
           '@message@': undefined,
           '@taskName@': undefined,
         },
       ),
-      '2025/02/04 05:54:00 [テスト]  - ',
+      '2025/02/04 05:54:00 [テスト] () - ',
       '@time@: [@projectName@] @taskName@ - @message@',
     );
   });

@@ -117,7 +117,7 @@
           },
           "simple-pomodoro-timer.stopMessageFormat": {
             "type": "string",
-            "default": "@time@ [stop] @@projectName@ @taskName@ @message@",
+            "default": "@time@ [stop(@cycleCount@)] @@projectName@ @taskName@ @message@",
             "description": "Notification message format when timer stopped."
           }
         }

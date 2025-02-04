@@ -56,6 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
       '@time@': now,
       '@taskName@': state.taskDesc,
       '@projectName@': state.projectName,
+      '@cycleCount@': undefined,
       '@message@': undefined,
     });
     vscode.window.showInformationMessage(message);
@@ -69,6 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
         '@time@': now,
         '@taskName@': state.taskDesc,
         '@projectName@': state.projectName,
+        '@cycleCount@': `${state.cycleCount}`,
         '@message@': reason,
       });
       vscode.window.showInformationMessage(message);
