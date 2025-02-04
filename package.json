@@ -14,9 +14,38 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:workbench.action.tasks.runTask"
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "taskDefinitions": [
+      {
+        "type": "startPomodoroTimer",
+        "required": [
+          "taskName"
+        ],
+        "properties": {
+          "taskName": {
+            "type": "string",
+            "description": "タイマー開始時の通知メッセージに表示するタスク名"
+          },
+          "projectName": {
+            "type": "string",
+            "description": "タイマー開始時の通知メッセージに表示するプロジェクト名"
+          }
+        }
+      },
+      {
+        "type": "stopPomodoroTimer",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "タイマーを停止する理由"
+          }
+        }
+      }
+    ],
     "configuration": [
       {
         "title": "Simple Pomodoro Timer",
@@ -81,14 +110,14 @@
             "default": 3,
             "description": "Delay time(sec) when switching timers."
           },
-          "simple-pomodoro-timer.startMessgeFormat": {
+          "simple-pomodoro-timer.startMessageFormat": {
             "type": "string",
-            "default": "@time@ [start] @projectName@ @taskName@ @message@",
+            "default": "@time@ [start] @@projectName@ @taskName@ @message@",
             "description": "Notification message format when timer started."
           },
-          "simple-pomodoro-timer.stoptMessgeFormat": {
+          "simple-pomodoro-timer.stopMessageFormat": {
             "type": "string",
-            "default": "@time@ [stop] @projectName@ @taskName@ @message@",
+            "default": "@time@ [stop] @@projectName@ @taskName@ @message@",
             "description": "Notification message format when timer stopped."
           }
         }
