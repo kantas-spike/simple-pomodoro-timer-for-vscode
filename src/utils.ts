@@ -55,7 +55,7 @@ function getNotificationMessage(
    */
   let result = formatString;
   for (const [k, v] of Object.entries(obj)) {
-    console.log(result, k, v);
+    // console.log(result, k, v);
     result = result.replace(k, v || '');
   }
   return result;
