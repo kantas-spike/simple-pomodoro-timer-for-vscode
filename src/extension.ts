@@ -5,9 +5,13 @@ import * as utils from './utils';
 import { AudioPlayer } from './audioPlayer';
 import { PomodoroConfig } from './config';
 import { PomodoroState } from './state';
+import { StartTimerTaskProvider } from './startTaskProvider';
+import { StopTimerTaskProvider } from './stopTaskProvider';
 
 let statusBarItem: vscode.StatusBarItem;
 let taskDesc = '';
+let startTimerTaskProvider: vscode.Disposable | undefined;
+let stopTimerTaskProvider: vscode.Disposable | undefined;
 
 // 設定取得
 const config = new PomodoroConfig();
@@ -61,12 +65,12 @@ export function activate(context: vscode.ExtensionContext) {
     const message = utils.getNotificationMessage(format, {
       '@time@': now,
       '@taskName@': state.taskDesc,
-      '@projectName@': undefined,
+      '@projectName@': state.projectName,
       '@message@': undefined,
     });
     vscode.window.showInformationMessage(message);
   };
-  state.onStopped = (state, _) => {
+  state.onStopped = (state, _, reason) => {
     updateStatusBar(state, null);
     if (state.timerId) {
       const format = config.stopMessgeFormat;
@@ -74,8 +78,8 @@ export function activate(context: vscode.ExtensionContext) {
       const message = utils.getNotificationMessage(format, {
         '@time@': now,
         '@taskName@': state.taskDesc,
-        '@projectName@': undefined,
-        '@message@': undefined,
+        '@projectName@': state.projectName,
+        '@message@': reason,
       });
       vscode.window.showInformationMessage(message);
     }
@@ -86,6 +90,15 @@ export function activate(context: vscode.ExtensionContext) {
     config.statusbarPriority,
   );
   updateStatusBar(state, 0);
+
+  startTimerTaskProvider = vscode.tasks.registerTaskProvider(
+    StartTimerTaskProvider.TaskType,
+    new StartTimerTaskProvider(state),
+  );
+  stopTimerTaskProvider = vscode.tasks.registerTaskProvider(
+    StopTimerTaskProvider.TaskType,
+    new StopTimerTaskProvider(state),
+  );
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
@@ -139,13 +152,30 @@ export function activate(context: vscode.ExtensionContext) {
       }
     },
   );
-  registerCommand(context, 'pomodoro-timer.stopTimer', () => {
-    state.stopTimer();
+  registerCommand(context, 'pomodoro-timer.stopTimer', async () => {
+    const defaultValue = 'タスク完了';
+    const result = await vscode.window.showInputBox({
+      value: defaultValue,
+      prompt: 'タイマーの停止理由',
+    });
+    if (result) {
+      state.stopTimer(result);
+    } else {
+      return;
+    }
   });
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
+  if (startTimerTaskProvider) {
+    startTimerTaskProvider.dispose();
+  }
+
+  if (stopTimerTaskProvider) {
+    stopTimerTaskProvider.dispose();
+  }
+
   if (statusBarItem) {
     statusBarItem.dispose();
   }
