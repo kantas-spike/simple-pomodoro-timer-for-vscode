@@ -2,12 +2,13 @@
   "name": "simple-pomodoro-timer",
   "displayName": "Simple Pomodoro Timer",
   "description": "simple pomodoro timer",
+  "publisher": "kantas-spike",
   "author": {
     "name": "kantas-spike"
   },
   "license": "MIT",
   "repository": "github:kantas-spike/simple-pomodoro-timer",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.96.0"
   },
