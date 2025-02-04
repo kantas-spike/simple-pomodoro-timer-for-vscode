@@ -49,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
     const bellName = state.getBellName();
     player.play(bellName);
   };
-  state.onStarted = (state, _) => {
+  state.onStarted = (state) => {
     const format = config.startMessgeFormat;
     const now = new Date().toLocaleString('ja-JP');
     const message = utils.getNotificationMessage(format, {
@@ -61,7 +61,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
     vscode.window.showInformationMessage(message);
   };
-  state.onStopped = (state, _, reason) => {
+  state.onStopped = (state, reason) => {
     updateStatusBar(state, null);
     if (state.timerId) {
       const format = config.stopMessgeFormat;
