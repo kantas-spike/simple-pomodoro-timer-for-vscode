@@ -1,6 +1,10 @@
 import { PomodoroConfig } from './config';
 
-type EventHandler = (state: PomodoroState, interval: number) => void;
+type EventHandler = (
+  state: PomodoroState,
+  interval: number,
+  reason?: string | undefined,
+) => void;
 type StateName = 'Working' | 'Break';
 interface InnerState {
   init(): void;
@@ -64,6 +68,7 @@ export class PomodoroState {
   private stateMap: Map<StateName, InnerState>;
 
   taskDesc: string = '';
+  projectName: string | undefined = undefined;
 
   currentState: StateName = 'Break';
   cycleCount: number = 0;
@@ -124,6 +129,8 @@ export class PomodoroState {
     this.timerIcon = this.timerIconForWorking;
     this.timerId = null;
     this.targetEndTimeMs = 0;
+    this.taskDesc = '';
+    this.projectName = undefined;
   }
 
   startInterval(): void {
@@ -175,11 +182,13 @@ export class PomodoroState {
     return this.getCurrentState().getBellName();
   }
 
-  startTimer(taskName: string) {
+  startTimer(taskName: string, projectName: string | undefined = undefined) {
     if (this.timerId) {
       this.stopTimer();
     }
     this.taskDesc = taskName;
+    this.projectName = projectName;
+
     this.switchTimer();
     this.onStarted(this, -1);
   }
@@ -196,9 +205,9 @@ export class PomodoroState {
     this.startInterval();
   }
 
-  stopTimer() {
+  stopTimer(reason: string | undefined = undefined) {
     this.clearInterval();
-    this.onStopped(this, 0);
+    this.onStopped(this, 0, reason);
     this.reset();
   }
 }
