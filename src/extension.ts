@@ -5,9 +5,13 @@ import * as utils from './utils';
 import { AudioPlayer } from './audioPlayer';
 import { PomodoroConfig } from './config';
 import { PomodoroState } from './state';
+import { StartTimerTaskProvider } from './startTaskProvider';
+import { StopTimerTaskProvider } from './stopTaskProvider';
 
 let statusBarItem: vscode.StatusBarItem;
 let taskDesc = '';
+let startTimerTaskProvider: vscode.Disposable | undefined;
+let stopTimerTaskProvider: vscode.Disposable | undefined;
 
 // 設定取得
 const config = new PomodoroConfig();
@@ -18,16 +22,6 @@ function updateStatusBar(state: PomodoroState, intervalMs: number | null) {
     statusBarItem.text = `${state.timerIcon} ${mmss} (${state.cycleCount})`;
     statusBarItem.show();
   }
-}
-
-function registerCommand(
-  context: vscode.ExtensionContext,
-  commandName: string,
-  callback: (...args: any[]) => any,
-  thisArg?: any,
-): void {
-  let disposable = vscode.commands.registerCommand(commandName, callback);
-  context.subscriptions.push(disposable);
 }
 
 // This method is called when your extension is activated
@@ -61,12 +55,12 @@ export function activate(context: vscode.ExtensionContext) {
     const message = utils.getNotificationMessage(format, {
       '@time@': now,
       '@taskName@': state.taskDesc,
-      '@projectName@': undefined,
+      '@projectName@': state.projectName,
       '@message@': undefined,
     });
     vscode.window.showInformationMessage(message);
   };
-  state.onStopped = (state, _) => {
+  state.onStopped = (state, _, reason) => {
     updateStatusBar(state, null);
     if (state.timerId) {
       const format = config.stopMessgeFormat;
@@ -74,8 +68,8 @@ export function activate(context: vscode.ExtensionContext) {
       const message = utils.getNotificationMessage(format, {
         '@time@': now,
         '@taskName@': state.taskDesc,
-        '@projectName@': undefined,
-        '@message@': undefined,
+        '@projectName@': state.projectName,
+        '@message@': reason,
       });
       vscode.window.showInformationMessage(message);
     }
@@ -87,65 +81,30 @@ export function activate(context: vscode.ExtensionContext) {
   );
   updateStatusBar(state, 0);
 
+  startTimerTaskProvider = vscode.tasks.registerTaskProvider(
+    StartTimerTaskProvider.TaskType,
+    new StartTimerTaskProvider(state),
+  );
+  stopTimerTaskProvider = vscode.tasks.registerTaskProvider(
+    StopTimerTaskProvider.TaskType,
+    new StopTimerTaskProvider(state),
+  );
+
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  registerCommand(
-    context,
-    'pomodoro-timer.startTimer',
-    async (projectName: string | undefined) => {
-      let defaultValue = '未入力';
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const selectedText = editor.document.getText(editor.selection);
-        if (selectedText) {
-          defaultValue = selectedText;
-        }
-      }
-      const result = await vscode.window.showInputBox({
-        value: defaultValue,
-        prompt: 'やることを入力してください',
-      });
-      if (result) {
-        state.startTimer(result);
-      } else {
-        return;
-      }
-    },
-  );
-  registerCommand(
-    context,
-    'pomodoro-timer.startTimerOnCurrentLine',
-    async (taskDesc: string | undefined, projectName: string | undefined) => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const currentLineText = editor.document.lineAt(
-          editor.selection.active.line,
-        ).text;
-        taskDesc = utils.taskNameFromTitleLineText(currentLineText);
-      }
-
-      if (!taskDesc) {
-        const defaultValue = '未入力';
-        taskDesc = await vscode.window.showInputBox({
-          value: defaultValue,
-          prompt: 'やることを入力してください',
-        });
-      }
-      if (taskDesc) {
-        state.startTimer(taskDesc);
-      } else {
-        return;
-      }
-    },
-  );
-  registerCommand(context, 'pomodoro-timer.stopTimer', () => {
-    state.stopTimer();
-  });
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
+  if (startTimerTaskProvider) {
+    startTimerTaskProvider.dispose();
+  }
+
+  if (stopTimerTaskProvider) {
+    stopTimerTaskProvider.dispose();
+  }
+
   if (statusBarItem) {
     statusBarItem.dispose();
   }

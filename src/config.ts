@@ -98,14 +98,14 @@ export class PomodoroConfig {
 
   get startMessgeFormat(): string {
     return this.config.get(
-      'startMessgeFormat',
+      'startMessageFormat',
       this.DEFAULT_START_MESSAGE_FORMAT,
     );
   }
 
   get stopMessgeFormat(): string {
     return this.config.get(
-      'stopMessgeFormat',
+      'stopMessageFormat',
       this.DEFAULT_STOP_MESSAGE_FORMAT,
     );
   }

@@ -1,0 +1,47 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "start pomodoro timer",
+      "type": "startPomodoroTimer",
+      "taskName": "${input:task_name}",
+      "projectName": "${input:project_name}"
+    },
+    {
+      "label": "stop pomodoro timer",
+      "type": "stopPomodoroTimer",
+      "reason": "${input:stop_reason}"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "task_name",
+      "type": "promptString",
+      "description": "タスク名",
+      "default": "無題"
+    },
+    {
+      "id": "stop_reason",
+      "type": "promptString",
+      "description": "タイマー停止の理由",
+      "default": "タスク完了"
+    },
+    {
+      "id": "project_name",
+      "type": "pickString",
+      "description": "プロジェクト名",
+      "default": "日記管理",
+      /* TODO プロジェクトが増えた場合、手動で更新する */
+      "options": [
+        "Pythonで数学",
+        "TIL管理",
+        "家庭科",
+        "日記管理",
+        "ポモドーロタイマー作成",
+        "null"
+      ]
+    }
+  ]
+}

@@ -13,27 +13,6 @@ function millisecToHHMM(ms: number | null): string {
   return `${min.padStart(2, '0')}:${sec.padStart(2, '0')}`;
 }
 
-function taskNameFromTodoLineText(lineText: string): string {
-  const trimedText = lineText.trim();
-  const regex = /^([-\+\*]|\d+\.)\s*(\[\s*\])\s*(.+)$/;
-  if (trimedText.match(regex)) {
-    return trimedText.replace(regex, '$1 $3');
-  } else {
-    return trimedText;
-  }
-}
-
-function taskNameFromTitleLineText(lineText: string): string {
-  const trimedText = lineText.trim();
-  /* ex) title = 'コマンド改善' */
-  const regex = /^\s*title\s*=\s*['"](.+)['"]\s*$/;
-  if (trimedText.match(regex)) {
-    return trimedText.replace(regex, '$1');
-  } else {
-    return trimedText;
-  }
-}
-
 type NotificationMessageSupportedKey =
   | '@time@'
   | '@taskName@'
@@ -55,15 +34,10 @@ function getNotificationMessage(
    */
   let result = formatString;
   for (const [k, v] of Object.entries(obj)) {
-    console.log(result, k, v);
+    // console.log(result, k, v);
     result = result.replace(k, v || '');
   }
   return result;
 }
 
-export {
-  millisecToHHMM,
-  taskNameFromTodoLineText,
-  taskNameFromTitleLineText,
-  getNotificationMessage,
-};
+export { millisecToHHMM, getNotificationMessage };
