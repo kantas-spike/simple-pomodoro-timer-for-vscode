@@ -24,16 +24,6 @@ function updateStatusBar(state: PomodoroState, intervalMs: number | null) {
   }
 }
 
-function registerCommand(
-  context: vscode.ExtensionContext,
-  commandName: string,
-  callback: (...args: any[]) => any,
-  thisArg?: any,
-): void {
-  let disposable = vscode.commands.registerCommand(commandName, callback);
-  context.subscriptions.push(disposable);
-}
-
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -103,67 +93,6 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  registerCommand(
-    context,
-    'pomodoro-timer.startTimer',
-    async (projectName: string | undefined) => {
-      let defaultValue = '未入力';
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const selectedText = editor.document.getText(editor.selection);
-        if (selectedText) {
-          defaultValue = selectedText;
-        }
-      }
-      const result = await vscode.window.showInputBox({
-        value: defaultValue,
-        prompt: 'やることを入力してください',
-      });
-      if (result) {
-        state.startTimer(result);
-      } else {
-        return;
-      }
-    },
-  );
-  registerCommand(
-    context,
-    'pomodoro-timer.startTimerOnCurrentLine',
-    async (taskDesc: string | undefined, projectName: string | undefined) => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const currentLineText = editor.document.lineAt(
-          editor.selection.active.line,
-        ).text;
-        taskDesc = utils.taskNameFromTitleLineText(currentLineText);
-      }
-
-      if (!taskDesc) {
-        const defaultValue = '未入力';
-        taskDesc = await vscode.window.showInputBox({
-          value: defaultValue,
-          prompt: 'やることを入力してください',
-        });
-      }
-      if (taskDesc) {
-        state.startTimer(taskDesc);
-      } else {
-        return;
-      }
-    },
-  );
-  registerCommand(context, 'pomodoro-timer.stopTimer', async () => {
-    const defaultValue = 'タスク完了';
-    const result = await vscode.window.showInputBox({
-      value: defaultValue,
-      prompt: 'タイマーの停止理由',
-    });
-    if (result) {
-      state.stopTimer(result);
-    } else {
-      return;
-    }
-  });
 }
 
 // This method is called when your extension is deactivated
