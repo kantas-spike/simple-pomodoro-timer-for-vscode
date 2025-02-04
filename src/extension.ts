@@ -12,6 +12,7 @@ let statusBarItem: vscode.StatusBarItem;
 let taskDesc = '';
 let startTimerTaskProvider: vscode.Disposable | undefined;
 let stopTimerTaskProvider: vscode.Disposable | undefined;
+let outputChannel: vscode.OutputChannel;
 
 // 設定取得
 const config = new PomodoroConfig();
@@ -29,6 +30,7 @@ function updateStatusBar(state: PomodoroState, intervalMs: number | null) {
 export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
+  outputChannel = vscode.window.createOutputChannel('Pomodoro Timer');
   const player = new AudioPlayer(config.getAudioDir(context.extensionPath));
   const state = new PomodoroState(
     config.workingTimeMs,
@@ -60,6 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
       '@message@': undefined,
     });
     vscode.window.showInformationMessage(message);
+    outputChannel.appendLine(message);
   };
   state.onStopped = (state, reason) => {
     updateStatusBar(state, null);
@@ -74,6 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
         '@message@': reason,
       });
       vscode.window.showInformationMessage(message);
+      outputChannel.appendLine(message);
     }
   };
 
@@ -105,6 +109,10 @@ export function deactivate() {
 
   if (stopTimerTaskProvider) {
     stopTimerTaskProvider.dispose();
+  }
+
+  if (outputChannel) {
+    outputChannel.dispose();
   }
 
   if (statusBarItem) {
