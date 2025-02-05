@@ -9,7 +9,6 @@ import { StartTimerTaskProvider } from './startTaskProvider';
 import { StopTimerTaskProvider } from './stopTaskProvider';
 
 let statusBarItem: vscode.StatusBarItem;
-let taskDesc = '';
 let startTimerTaskProvider: vscode.Disposable | undefined;
 let stopTimerTaskProvider: vscode.Disposable | undefined;
 let outputChannel: vscode.OutputChannel;
@@ -32,17 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   outputChannel = vscode.window.createOutputChannel('Pomodoro Timer');
   const player = new AudioPlayer(config.getAudioDir(context.extensionPath));
-  const state = new PomodoroState(
-    config.workingTimeMs,
-    config.shortBreakTimeMs,
-    config.longBreakTimeMs,
-    config.bellNameAtEndOfNormalWorking,
-    config.bellNameAtEndOfFourthWorking,
-    config.bellNameAtEndOfBreak,
-    config.timerIconForWroking,
-    config.timerIconForBreak,
-    config.delayTimeWhenSwitchTimer,
-  );
+  const state = new PomodoroState(config);
   state.onTiked = (state, interval) => {
     updateStatusBar(state, interval);
   };
@@ -95,10 +84,6 @@ export function activate(context: vscode.ExtensionContext) {
     StopTimerTaskProvider.TaskType,
     new StopTimerTaskProvider(state),
   );
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
 }
 
 // This method is called when your extension is deactivated

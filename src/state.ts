@@ -89,29 +89,19 @@ export class PomodoroState {
   onStarted: EventHandler = () => {};
   onStopped: EventHandler = () => {};
 
-  constructor(
-    workingIntervalMs: number,
-    shortBreakIntervalMs: number,
-    longBreakIntervalMs: number,
-    bellNameAtEndOfNormalWorking: string,
-    bellNameAtEndOfFourthWorking: string,
-    bellNameAtEndOfBreak: string,
-    timerIconForWorking: string,
-    timerIconForBreak: string,
-    delayTimeSec: number,
-  ) {
-    this.workingIntervalMs = workingIntervalMs;
-    this.shortBreakIntervalMs = shortBreakIntervalMs;
-    this.longBreakIntervalMs = longBreakIntervalMs;
+  constructor(config: PomodoroConfig) {
+    this.workingIntervalMs = config.workingTimeMs;
+    this.shortBreakIntervalMs = config.shortBreakTimeMs;
+    this.longBreakIntervalMs = config.longBreakTimeMs;
 
-    this.bellNameAtEndOfNormalWorking = bellNameAtEndOfNormalWorking;
-    this.bellNameAtEndOfFourthWorking = bellNameAtEndOfFourthWorking;
-    this.bellNameAtEndOfBreak = bellNameAtEndOfBreak;
+    this.bellNameAtEndOfNormalWorking = config.bellNameAtEndOfNormalWorking;
+    this.bellNameAtEndOfFourthWorking = config.bellNameAtEndOfFourthWorking;
+    this.bellNameAtEndOfBreak = config.bellNameAtEndOfBreak;
 
-    this.timerIconForWorking = timerIconForWorking;
-    this.timerIconForBreak = timerIconForBreak;
+    this.timerIconForWorking = config.timerIconForWroking;
+    this.timerIconForBreak = config.timerIconForBreak;
 
-    this.timerDelayMs = delayTimeSec * 1000;
+    this.timerDelayMs = config.delayTimeWhenSwitchTimer * 1000;
 
     this.reset();
 

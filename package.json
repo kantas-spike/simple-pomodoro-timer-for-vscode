@@ -133,6 +133,8 @@
     "lint": "eslint src --ext ts",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
     "test": "node ./out/test/runTest.js",
+    "test-cli": "npx vscode-test",
+    "coverage": "npx vscode-test --coverage --coverage-output ./.coverage --coverage-reporter html --coverage-reporter text",
     "package": "npx vsce package"
   },
   "devDependencies": {
@@ -141,6 +143,7 @@
     "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
+    "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.3.4",
     "@vscode/vsce": "^3.2.2",
     "eslint": "^8.50.0",
