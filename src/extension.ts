@@ -32,17 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   outputChannel = vscode.window.createOutputChannel('Pomodoro Timer');
   const player = new AudioPlayer(config.getAudioDir(context.extensionPath));
-  const state = new PomodoroState(
-    config.workingTimeMs,
-    config.shortBreakTimeMs,
-    config.longBreakTimeMs,
-    config.bellNameAtEndOfNormalWorking,
-    config.bellNameAtEndOfFourthWorking,
-    config.bellNameAtEndOfBreak,
-    config.timerIconForWroking,
-    config.timerIconForBreak,
-    config.delayTimeWhenSwitchTimer,
-  );
+  const state = new PomodoroState(config);
   state.onTiked = (state, interval) => {
     updateStatusBar(state, interval);
   };
