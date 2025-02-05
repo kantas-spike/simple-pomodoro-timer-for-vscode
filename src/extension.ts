@@ -9,7 +9,6 @@ import { StartTimerTaskProvider } from './startTaskProvider';
 import { StopTimerTaskProvider } from './stopTaskProvider';
 
 let statusBarItem: vscode.StatusBarItem;
-let taskDesc = '';
 let startTimerTaskProvider: vscode.Disposable | undefined;
 let stopTimerTaskProvider: vscode.Disposable | undefined;
 let outputChannel: vscode.OutputChannel;
@@ -85,10 +84,6 @@ export function activate(context: vscode.ExtensionContext) {
     StopTimerTaskProvider.TaskType,
     new StopTimerTaskProvider(state),
   );
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
 }
 
 // This method is called when your extension is deactivated
