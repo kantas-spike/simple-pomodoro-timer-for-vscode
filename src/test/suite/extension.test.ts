@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import * as assert from 'assert';
 import * as utils from '../../utils';
 import { PomodoroConfig } from '../../config';
@@ -61,6 +62,9 @@ suite('Extension Test Suite', () => {
           '@taskName@': 'テストタスク',
           '@projectName@': 'テストプロジェクト',
           '@cycleCount@': String(2),
+          '@wipTime@': undefined,
+          '@timerIconForWorking@': 'W',
+          '@timerIconForBreak@': 'B',
           '@message@': 'テストメッセージ',
         },
       ),
@@ -75,6 +79,9 @@ suite('Extension Test Suite', () => {
           '@projectName@': 'テスト',
           '@cycleCount@': undefined,
           '@message@': undefined,
+          '@wipTime@': undefined,
+          '@timerIconForWorking@': 'W',
+          '@timerIconForBreak@': 'B',
           '@taskName@': undefined,
         },
       ),

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
@@ -48,21 +49,29 @@ export function activate(context: vscode.ExtensionContext) {
       '@taskName@': state.taskDesc,
       '@projectName@': state.projectName,
       '@cycleCount@': undefined,
+      '@wipTime@': undefined,
+      '@timerIconForWorking@': state.timerIconForWorking,
+      '@timerIconForBreak@': state.timerIconForBreak,
       '@message@': undefined,
     });
     vscode.window.showInformationMessage(message);
     outputChannel.appendLine(message);
   };
-  state.onStopped = (state, reason) => {
+  state.onStopped = (state, wipTimeMs, reason) => {
     updateStatusBar(state, null);
     if (state.timerId) {
       const format = config.stopMessgeFormat;
       const now = new Date().toLocaleString('ja-JP');
+      const wipMinSec = utils.millisecToHHMM(wipTimeMs);
+
       const message = utils.getNotificationMessage(format, {
         '@time@': now,
         '@taskName@': state.taskDesc,
         '@projectName@': state.projectName,
         '@cycleCount@': `${state.cycleCount}`,
+        '@wipTime@': wipMinSec,
+        '@timerIconForWorking@': state.timerIconForWorking,
+        '@timerIconForBreak@': state.timerIconForBreak,
         '@message@': reason,
       });
       vscode.window.showInformationMessage(message);
