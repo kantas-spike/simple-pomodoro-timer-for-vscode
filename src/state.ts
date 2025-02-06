@@ -7,6 +7,7 @@ interface InnerState {
   init(): void;
   incrementCycle(): void;
   getIntervalMs(): number;
+  getWipTimeMs(): number;
   switch(): void;
   getBellName(): string;
 }
@@ -15,6 +16,12 @@ class WorkingState implements InnerState {
   private state: PomodoroState;
   constructor(state: PomodoroState) {
     this.state = state;
+  }
+  getWipTimeMs(): number {
+    const now = new Date();
+    const intervalMs = this.getIntervalMs();
+    const remainingTimeMs = this.state.targetEndTimeMs - now.getTime();
+    return intervalMs - remainingTimeMs;
   }
   getBellName(): string {
     return this.state.cycleCount % 4 === 0
@@ -39,6 +46,9 @@ class BreakState implements InnerState {
   private state: PomodoroState;
   constructor(state: PomodoroState) {
     this.state = state;
+  }
+  getWipTimeMs(): number {
+    return 0;
   }
   getBellName(): string {
     return this.state.bellNameAtEndOfBreak;
