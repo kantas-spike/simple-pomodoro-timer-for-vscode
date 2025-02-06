@@ -18,6 +18,9 @@ type NotificationMessageSupportedKey =
   | '@taskName@'
   | '@projectName@'
   | '@cycleCount@'
+  | '@wipTime@'
+  | '@timerIconForWorking@'
+  | '@timerIconForBreak@'
   | '@message@';
 type NotificationMessageKV = {
   [key in NotificationMessageSupportedKey]: string | undefined;
