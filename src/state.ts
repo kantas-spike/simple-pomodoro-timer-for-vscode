@@ -1,6 +1,11 @@
 import { PomodoroConfig } from './config';
 
-type EventHandler = (state: PomodoroState, reason?: string | undefined) => void;
+type EventHandler = (state: PomodoroState, reason?: string) => void;
+type StopEventHandler = (
+  state: PomodoroState,
+  wipTimeMs: number,
+  reason?: string,
+) => void;
 type IntervalEventHandler = (state: PomodoroState, interval: number) => void;
 type StateName = 'Working' | 'Break';
 interface InnerState {
@@ -97,7 +102,7 @@ export class PomodoroState {
   onTimerFinished: IntervalEventHandler = () => {};
   onTiked: IntervalEventHandler = () => {};
   onStarted: EventHandler = () => {};
-  onStopped: EventHandler = () => {};
+  onStopped: StopEventHandler = () => {};
 
   constructor(config: PomodoroConfig) {
     this.workingIntervalMs = config.workingTimeMs;
@@ -204,7 +209,10 @@ export class PomodoroState {
 
   stopTimer(reason: string | undefined = undefined) {
     this.clearInterval();
-    this.onStopped(this, reason);
+
+    const wipTimeMs = this.getCurrentState().getWipTimeMs();
+
+    this.onStopped(this, wipTimeMs, reason);
     this.reset();
   }
 }
