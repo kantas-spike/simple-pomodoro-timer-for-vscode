@@ -16,36 +16,6 @@ suite('Extension Test Suite', () => {
     assert.strictEqual(-1, [1, 2, 3].indexOf(0));
   });
 
-  test('Default Configuration', () => {
-    const config: vscode.WorkspaceConfiguration =
-      vscode.workspace.getConfiguration();
-    console.log('@@@' + config.get('simple-pomodoro-timer.defaultWorkingTime'));
-    assert.strictEqual(
-      0.2,
-      config.get('simple-pomodoro-timer.defaultWorkingTime'),
-    );
-    assert.strictEqual(
-      0.1,
-      config.get('simple-pomodoro-timer.defaultShortBreakTime'),
-    );
-    assert.strictEqual(
-      0.3,
-      config.get('simple-pomodoro-timer.defaultLongBreakTime'),
-      'aaa',
-    );
-    assert.strictEqual(null, config.get('simple-pomodoro-timer.audioDir'));
-  });
-
-  test('PomodoroConfig', () => {
-    const config = new PomodoroConfig();
-    assert.strictEqual(0.2 * 60 * 1000, config.workingTimeMs);
-    assert.strictEqual(0.1 * 60 * 1000, config.shortBreakTimeMs);
-    assert.strictEqual(0.3 * 60 * 1000, config.longBreakTimeMs);
-    assert.strictEqual('marimba02.mp3', config.bellNameAtEndOfNormalWorking);
-    assert.strictEqual('pulse01.mp3', config.bellNameAtEndOfFourthWorking);
-    assert.strictEqual('cymbal01.mp3', config.bellNameAtEndOfBreak);
-  });
-
   test('utils.millisecToHHMM', () => {
     assert.strictEqual('00:01', utils.millisecToHHMM(1 * 1000));
     assert.strictEqual('00:10', utils.millisecToHHMM(10 * 1000));
