@@ -1,23 +1,10 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { errorMonitor } from 'stream';
 
 const SECTION_ID = 'simple-pomodoro-timer';
 
 export class PomodoroConfig {
-  private defaultWorkingTimeMin = 25;
-  private defaultLongBreakTimeMin = 15;
-  private defaultShortBreakTimeMin = 5;
-  private defaultBellFileName = 'marimba01.mp3';
-  private defaultTimerIconForWorking = '🍅';
-  private defaultTimerIconForBreak = '🍆';
-  private defaultStatusbarAlignment = 'right';
-  private defaultStatusbarPriority = -100;
-  private defaultDelayTimeSec = 3;
-  private defaultStartMessageFormat =
-    '@time@ [start] @projectName@ @taskName@ @message@';
-  private defaultStopMessageFormat =
-    '@time@ [stop] @projectName@ @taskName@ @message@';
-
   private config: vscode.WorkspaceConfiguration;
 
   constructor() {
@@ -25,59 +12,48 @@ export class PomodoroConfig {
   }
 
   get workingTimeMs(): number {
-    return this.minutesToMillisec(
-      'defaultWorkingTime',
-      this.defaultWorkingTimeMin,
-    );
+    const key = 'defaultWorkingTime';
+    return this.minutesToMillisec(key);
   }
 
   get shortBreakTimeMs(): number {
-    return this.minutesToMillisec(
-      'defaultShortBreakTime',
-      this.defaultShortBreakTimeMin,
-    );
+    const key = 'defaultShortBreakTime';
+    return this.minutesToMillisec(key);
   }
 
   get longBreakTimeMs(): number {
-    return this.minutesToMillisec(
-      'defaultLongBreakTime',
-      this.defaultLongBreakTimeMin,
-    );
+    const key = 'defaultLongBreakTime';
+    return this.minutesToMillisec(key);
   }
 
-  get bellNameAtEndOfNormalWorking(): string {
-    return this.config.get(
-      'bellNameAtEndOfNormalWorking',
-      this.defaultBellFileName,
-    );
+  get bellFileNameAtEndOfNormalWorking(): string {
+    const key = 'bellNameAtEndOfNormalWorking';
+    return this.getConfigValue<string>(key);
   }
 
-  get bellNameAtEndOfFourthWorking(): string {
-    return this.config.get(
-      'bellNameAtEndOfFourthWorking',
-      this.defaultBellFileName,
-    );
+  get bellFileNameAtEndOfFourthWorking(): string {
+    const key = 'bellNameAtEndOfFourthWorking';
+    return this.getConfigValue<string>(key);
   }
 
-  get bellNameAtEndOfBreak(): string {
-    return this.config.get('bellNameAtEndOfBreak', this.defaultBellFileName);
+  get bellFileNameAtEndOfBreak(): string {
+    const key = 'bellNameAtEndOfBreak';
+    return this.getConfigValue<string>(key);
   }
 
   get timerIconForWroking(): string {
-    return this.config.get(
-      'timerIconForWorking',
-      this.defaultTimerIconForWorking,
-    );
+    const key = 'timerIconForWorking';
+    return this.getConfigValue<string>(key);
   }
 
   get timerIconForBreak(): string {
-    return this.config.get('timerIconForBreak', this.defaultTimerIconForBreak);
+    const key = 'timerIconForBreak';
+    return this.getConfigValue<string>(key);
   }
 
   get statusbarAlignment(): vscode.StatusBarAlignment {
-    const align = this.config
-      .get('statusbarAlignment', this.defaultStatusbarAlignment)
-      .toLowerCase();
+    const key = 'statusbarAlignment';
+    const align = this.getConfigValue<string>(key).toLowerCase();
     if (align === 'left') {
       return vscode.StatusBarAlignment.Left;
     } else {
@@ -86,29 +62,28 @@ export class PomodoroConfig {
   }
 
   get statusbarPriority(): number {
-    return this.config.get('statusbarPriority', this.defaultStatusbarPriority);
+    const key = 'statusbarPriority';
+    return this.getConfigValue<number>(key);
   }
 
   get delayTimeWhenSwitchTimer(): number {
-    return this.config.get(
-      'delayTimeWhenSwitchTimer',
-      this.defaultDelayTimeSec,
-    );
+    const key = 'delayTimeWhenSwitchTimer';
+    return this.getConfigValue<number>(key);
   }
 
   get startMessgeFormat(): string {
-    return this.config.get(
-      'startMessageFormat',
-      this.defaultStartMessageFormat,
-    );
+    const key = 'startMessageFormat';
+    return this.getConfigValue<string>(key);
   }
 
   get stopMessgeFormat(): string {
-    return this.config.get('stopMessageFormat', this.defaultStopMessageFormat);
+    const key = 'stopMessageFormat';
+    return this.getConfigValue<string>(key);
   }
 
   getAudioDir(extensionPath: string): string {
-    const adir = this.config.get('audioDir', null);
+    const key = 'audioDir';
+    const adir = this.getConfigValue<string | null>(key);
     if (adir) {
       return adir;
     } else {
@@ -116,7 +91,16 @@ export class PomodoroConfig {
     }
   }
 
-  private minutesToMillisec(key: string, defaultvalue: number): number {
-    return this.config.get<number>(key, defaultvalue) * 60 * 1000;
+  private getConfigValue<T>(key: string): T {
+    const val = this.config.get<T>(key);
+    if (val === undefined) {
+      throw new Error(`設定項目: ${key}が定義されていません。`);
+    }
+    return val;
+  }
+
+  private minutesToMillisec(key: string): number {
+    const val = this.getConfigValue<number>(key);
+    return val * 60 * 1000;
   }
 }
