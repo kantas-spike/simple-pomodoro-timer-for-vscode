@@ -109,9 +109,9 @@ export class PomodoroState {
     this.shortBreakIntervalMs = config.shortBreakTimeMs;
     this.longBreakIntervalMs = config.longBreakTimeMs;
 
-    this.bellNameAtEndOfNormalWorking = config.bellNameAtEndOfNormalWorking;
-    this.bellNameAtEndOfFourthWorking = config.bellNameAtEndOfFourthWorking;
-    this.bellNameAtEndOfBreak = config.bellNameAtEndOfBreak;
+    this.bellNameAtEndOfNormalWorking = config.bellFileNameAtEndOfNormalWorking;
+    this.bellNameAtEndOfFourthWorking = config.bellFileNameAtEndOfFourthWorking;
+    this.bellNameAtEndOfBreak = config.bellFileNameAtEndOfBreak;
 
     this.timerIconForWorking = config.timerIconForWroking;
     this.timerIconForBreak = config.timerIconForBreak;
