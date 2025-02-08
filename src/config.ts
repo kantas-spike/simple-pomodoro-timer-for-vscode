@@ -4,18 +4,18 @@ import * as path from 'path';
 const SECTION_ID = 'simple-pomodoro-timer';
 
 export class PomodoroConfig {
-  private DEFAULT_WORKING_TIME_MIN = 25;
-  private DEFAULT_LONG_BREAK_TIME_MIN = 15;
-  private DEFAULT_SHORT_BREAK_TIME_MIN = 5;
-  private DEFAULT_BELL_FILENAME = 'marimba01.mp3';
-  private DEFAULT_TIMER_ICON_WORKING = '🍅';
-  private DEFAULT_TIMER_ICON_BREAK = '🍆';
-  private DEFAULT_TIMER_ALIGNMENT = 'right';
-  private DEFAULT_TIMER_PRIORITY = -100;
-  private DEFAULT_DELAY_TIME_SEC = 3;
-  private DEFAULT_START_MESSAGE_FORMAT =
+  private defaultWorkingTimeMin = 25;
+  private defaultLongBreakTimeMin = 15;
+  private defaultShortBreakTimeMin = 5;
+  private defaultBellFileName = 'marimba01.mp3';
+  private defaultTimerIconForWorking = '🍅';
+  private defaultTimerIconForBreak = '🍆';
+  private defaultStatusbarAlignment = 'right';
+  private defaultStatusbarPriority = -100;
+  private defaultDelayTimeSec = 3;
+  private defaultStartMessageFormat =
     '@time@ [start] @projectName@ @taskName@ @message@';
-  private DEFAULT_STOP_MESSAGE_FORMAT =
+  private defaultStopMessageFormat =
     '@time@ [stop] @projectName@ @taskName@ @message@';
 
   private config: vscode.WorkspaceConfiguration;
@@ -27,56 +27,56 @@ export class PomodoroConfig {
   get workingTimeMs(): number {
     return this.minutesToMillisec(
       'defaultWorkingTime',
-      this.DEFAULT_WORKING_TIME_MIN,
+      this.defaultWorkingTimeMin,
     );
   }
 
   get shortBreakTimeMs(): number {
     return this.minutesToMillisec(
       'defaultShortBreakTime',
-      this.DEFAULT_SHORT_BREAK_TIME_MIN,
+      this.defaultShortBreakTimeMin,
     );
   }
 
   get longBreakTimeMs(): number {
     return this.minutesToMillisec(
       'defaultLongBreakTime',
-      this.DEFAULT_LONG_BREAK_TIME_MIN,
+      this.defaultLongBreakTimeMin,
     );
   }
 
   get bellNameAtEndOfNormalWorking(): string {
     return this.config.get(
       'bellNameAtEndOfNormalWorking',
-      this.DEFAULT_BELL_FILENAME,
+      this.defaultBellFileName,
     );
   }
 
   get bellNameAtEndOfFourthWorking(): string {
     return this.config.get(
       'bellNameAtEndOfFourthWorking',
-      this.DEFAULT_BELL_FILENAME,
+      this.defaultBellFileName,
     );
   }
 
   get bellNameAtEndOfBreak(): string {
-    return this.config.get('bellNameAtEndOfBreak', this.DEFAULT_BELL_FILENAME);
+    return this.config.get('bellNameAtEndOfBreak', this.defaultBellFileName);
   }
 
   get timerIconForWroking(): string {
     return this.config.get(
       'timerIconForWorking',
-      this.DEFAULT_TIMER_ICON_WORKING,
+      this.defaultTimerIconForWorking,
     );
   }
 
   get timerIconForBreak(): string {
-    return this.config.get('timerIconForBreak', this.DEFAULT_TIMER_ICON_BREAK);
+    return this.config.get('timerIconForBreak', this.defaultTimerIconForBreak);
   }
 
   get statusbarAlignment(): vscode.StatusBarAlignment {
     const align = this.config
-      .get('statusbarAlignment', this.DEFAULT_TIMER_ALIGNMENT)
+      .get('statusbarAlignment', this.defaultStatusbarAlignment)
       .toLowerCase();
     if (align === 'left') {
       return vscode.StatusBarAlignment.Left;
@@ -86,28 +86,25 @@ export class PomodoroConfig {
   }
 
   get statusbarPriority(): number {
-    return this.config.get('statusbarPriority', this.DEFAULT_TIMER_PRIORITY);
+    return this.config.get('statusbarPriority', this.defaultStatusbarPriority);
   }
 
   get delayTimeWhenSwitchTimer(): number {
     return this.config.get(
       'delayTimeWhenSwitchTimer',
-      this.DEFAULT_DELAY_TIME_SEC,
+      this.defaultDelayTimeSec,
     );
   }
 
   get startMessgeFormat(): string {
     return this.config.get(
       'startMessageFormat',
-      this.DEFAULT_START_MESSAGE_FORMAT,
+      this.defaultStartMessageFormat,
     );
   }
 
   get stopMessgeFormat(): string {
-    return this.config.get(
-      'stopMessageFormat',
-      this.DEFAULT_STOP_MESSAGE_FORMAT,
-    );
+    return this.config.get('stopMessageFormat', this.defaultStopMessageFormat);
   }
 
   getAudioDir(extensionPath: string): string {
