@@ -113,7 +113,7 @@
           },
           "simple-pomodoro-timer.startMessageFormat": {
             "type": "string",
-            "default": "@time@ [start] @@projectName@ @taskName@ @message@",
+            "default": "@time@ [start] @@projectName@ @taskName@",
             "description": "Notification message format when timer started."
           },
           "simple-pomodoro-timer.stopMessageFormat": {
