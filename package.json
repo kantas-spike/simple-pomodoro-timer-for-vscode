@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "repository": "github:kantas-spike/simple-pomodoro-timer",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -113,7 +113,7 @@
           },
           "simple-pomodoro-timer.startMessageFormat": {
             "type": "string",
-            "default": "@time@ [start] @@projectName@ @taskName@ @message@",
+            "default": "@time@ [start] @@projectName@ @taskName@",
             "description": "Notification message format when timer started."
           },
           "simple-pomodoro-timer.stopMessageFormat": {
