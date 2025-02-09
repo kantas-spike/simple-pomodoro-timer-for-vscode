@@ -10,6 +10,7 @@ interface StartTimerTaskDefinition extends vscode.TaskDefinition {
 export class StartTimerTaskProvider implements vscode.TaskProvider {
   static TaskType = 'startPomodoroTimer';
   private state: PomodoroState;
+  private defaultTaskName: string = '@@@@@DUMMY@@@@@';
 
   constructor(state: PomodoroState) {
     this.state = state;
@@ -27,7 +28,7 @@ export class StartTimerTaskProvider implements vscode.TaskProvider {
     const tasks: vscode.Task[] = [];
     const defaultDefinition: StartTimerTaskDefinition = {
       type: StartTimerTaskProvider.TaskType,
-      taskName: 'タスク名',
+      taskName: this.defaultTaskName,
     };
     tasks.push(this.getTask(defaultDefinition));
     return tasks;
@@ -43,9 +44,23 @@ export class StartTimerTaskProvider implements vscode.TaskProvider {
         async (
           resolvedDefinition: vscode.TaskDefinition,
         ): Promise<vscode.Pseudoterminal> => {
+          let taskName: string | undefined = undefined;
+          if (resolvedDefinition.taskName === this.defaultTaskName) {
+            taskName = await vscode.window.showInputBox({
+              placeHolder: 'タスク名を入力してください',
+              value: '無題',
+              validateInput: (text) => {
+                return text.trim().length > 0
+                  ? null
+                  : 'タスク名には1文字以上を入力してください';
+              },
+            });
+          } else {
+            taskName = resolvedDefinition.taskName;
+          }
           return new StartTimerTaskTerminal(
             this.state,
-            resolvedDefinition.taskName,
+            taskName,
             resolvedDefinition.projectName,
           );
         },
@@ -65,7 +80,7 @@ export class StartTimerTaskProvider implements vscode.TaskProvider {
 
 class StartTimerTaskTerminal implements vscode.Pseudoterminal {
   private state: PomodoroState;
-  private taskName: string = '';
+  private taskName: string | undefined = undefined;
   private projectName: string | undefined = undefined;
   private writeEmitter = new vscode.EventEmitter<string>();
   onDidWrite: vscode.Event<string> = this.writeEmitter.event;
@@ -79,7 +94,7 @@ class StartTimerTaskTerminal implements vscode.Pseudoterminal {
 
   constructor(
     state: PomodoroState,
-    taskName: string,
+    taskName: string | undefined = undefined,
     projectName: string | undefined = undefined,
   ) {
     this.state = state;
@@ -88,12 +103,21 @@ class StartTimerTaskTerminal implements vscode.Pseudoterminal {
   }
 
   open(initialDimensions: vscode.TerminalDimensions | undefined): void {
-    this.state.startTimer(this.taskName, this.projectName);
+    if (!this.taskName) {
+      this.dispose();
+      return;
+    }
+    this.state.startTimer(this.taskName || '', this.projectName);
     // this.writeEmitter.fire('in open');
+    this.dispose();
+    this.close();
+  }
+
+  dispose(): void {
     this.closeEmitter.fire(0);
     this.writeEmitter.dispose();
     this.closeEmitter.dispose();
-    this.close();
   }
+
   close(): void {}
 }

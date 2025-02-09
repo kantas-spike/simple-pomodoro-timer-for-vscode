@@ -8,6 +8,7 @@ interface StopTimerTaskDefinition extends vscode.TaskDefinition {
 export class StopTimerTaskProvider implements vscode.TaskProvider {
   static TaskType = 'stopPomodoroTimer';
   private state: PomodoroState;
+  private defaultReason: string = '@@@@@DUMMY@@@@@';
 
   constructor(state: PomodoroState) {
     this.state = state;
@@ -25,7 +26,7 @@ export class StopTimerTaskProvider implements vscode.TaskProvider {
     const tasks: vscode.Task[] = [];
     const defaultDefinition: StopTimerTaskDefinition = {
       type: StopTimerTaskProvider.TaskType,
-      reason: 'タスク完了',
+      reason: this.defaultReason,
     };
     tasks.push(this.getTask(defaultDefinition));
     return tasks;
@@ -41,10 +42,19 @@ export class StopTimerTaskProvider implements vscode.TaskProvider {
         async (
           resolvedDefinition: vscode.TaskDefinition,
         ): Promise<vscode.Pseudoterminal> => {
-          return new StopTimerTaskTerminal(
-            this.state,
-            resolvedDefinition.reason,
-          );
+          let reason: string | undefined = undefined;
+          if (resolvedDefinition.reason === this.defaultReason) {
+            reason = await vscode.window.showInputBox({
+              placeHolder: '停止する理由を入力してください',
+              value: 'タスク完了',
+              validateInput: (text) => {
+                return text.trim().length > 0
+                  ? null
+                  : '停止理由には1文字以上を入力してください';
+              },
+            });
+          }
+          return new StopTimerTaskTerminal(this.state, reason);
         },
       ),
       [],
@@ -79,12 +89,19 @@ class StopTimerTaskTerminal implements vscode.Pseudoterminal {
   }
 
   open(initialDimensions: vscode.TerminalDimensions | undefined): void {
+    if (!this.reason) {
+      this.dispose();
+      return;
+    }
     this.state.stopTimer(this.reason);
     // this.writeEmitter.fire('in open');
+    this.dispose();
+    this.close();
+  }
+  dispose(): void {
     this.closeEmitter.fire(0);
     this.writeEmitter.dispose();
     this.closeEmitter.dispose();
-    this.close();
   }
   close(): void {}
 }
