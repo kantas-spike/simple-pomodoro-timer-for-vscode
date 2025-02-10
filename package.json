@@ -140,6 +140,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.2",
     "@types/node": "18.x",
+    "@types/sinon": "^17.0.3",
     "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
@@ -152,6 +153,7 @@
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
     "prettier": "^3.4.2",
+    "sinon": "^19.0.2",
     "typescript": "^5.2.2"
   },
   "dependencies": {
