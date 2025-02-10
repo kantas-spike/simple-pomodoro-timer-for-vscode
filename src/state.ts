@@ -1,6 +1,6 @@
 import { PomodoroConfig } from './config';
 
-type EventHandler = (state: PomodoroState, reason?: string) => void;
+type EventHandler = (state: PomodoroState) => void;
 type StopEventHandler = (
   state: PomodoroState,
   wipTimeMs: number,
@@ -29,7 +29,7 @@ class WorkingState implements InnerState {
     return intervalMs - remainingTimeMs;
   }
   getBellName(): string {
-    return this.state.cycleCount % 4 === 0
+    return this.state.cycleCount !== 0 && this.state.cycleCount % 4 === 0
       ? this.state.bellNameAtEndOfFourthWorking
       : this.state.bellNameAtEndOfNormalWorking;
   }

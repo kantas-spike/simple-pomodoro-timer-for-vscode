@@ -55,10 +55,22 @@ export function assertWorkingFinishedState(
   assert.strictEqual(state.cycleCount, cycleCount);
   assert.strictEqual(state.currentState, 'Working');
   assert.strictEqual(state.timerId, null);
+  if (cycleCount === 0 || cycleCount % 4 !== 0) {
+    assert.strictEqual(
+      state.getBellName(),
+      config.bellFileNameAtEndOfNormalWorking,
+    );
+  } else {
+    assert.strictEqual(
+      state.getBellName(),
+      config.bellFileNameAtEndOfFourthWorking,
+    );
+  }
 }
 
 export function assertBreakFinishedState(
   state: PomodoroState,
+  config: PomodoroConfig,
   onFinishedHelper: IntervalHandlerHelper,
   cycleCount: number,
 ) {
@@ -66,6 +78,7 @@ export function assertBreakFinishedState(
   assert.strictEqual(state.cycleCount, cycleCount);
   assert.strictEqual(state.currentState, 'Break');
   assert.strictEqual(state.timerId, null);
+  assert.strictEqual(state.getBellName(), config.bellFileNameAtEndOfBreak);
 }
 
 export function assertBreakStartedState(
@@ -126,5 +139,29 @@ export class IntervalHandlerHelper {
 
   assertLastCalledWith(state: PomodoroState, interval: number) {
     sinon.assert.calledWith(this.handler.lastCall, state, interval);
+  }
+}
+
+export class StoplHandlerHelper {
+  handler: sinon.SinonSpy<any[], any>;
+  private lastCallCount = 0;
+
+  constructor() {
+    this.handler = sinon.fake();
+  }
+
+  assertCallCountDiff(count: number) {
+    const newCount = this.handler.callCount;
+    const diff = newCount - this.lastCallCount;
+    this.lastCallCount = newCount;
+    assert.strictEqual(diff, count);
+  }
+
+  assertLastCalledWith(
+    state: PomodoroState,
+    wipTimeMs: number,
+    reason: string | undefined,
+  ) {
+    sinon.assert.calledWith(this.handler.lastCall, state, wipTimeMs, reason);
   }
 }
