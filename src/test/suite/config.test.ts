@@ -25,7 +25,7 @@ suite('PomodoroConfig Test Suite', () => {
     assert.strictEqual(-100, config.statusbarPriority);
     assert.strictEqual(3, config.delayTimeWhenSwitchTimer);
     assert.strictEqual(
-      '@time@ [start] @@projectName@ @taskName@ @message@',
+      '@time@ [start] @@projectName@ @taskName@',
       config.startMessgeFormat,
     );
     assert.strictEqual(
