@@ -46,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
     const now = new Date().toLocaleString('ja-JP');
     const message = utils.getNotificationMessage(format, {
       '@time@': now,
-      '@taskName@': state.taskDesc,
+      '@taskName@': state.taskName,
       '@projectName@': state.projectName,
       '@cycleCount@': undefined,
       '@wipTime@': undefined,
@@ -66,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       const message = utils.getNotificationMessage(format, {
         '@time@': now,
-        '@taskName@': state.taskDesc,
+        '@taskName@': state.taskName,
         '@projectName@': state.projectName,
         '@cycleCount@': `${state.cycleCount}`,
         '@wipTime@': wipMinSec,
