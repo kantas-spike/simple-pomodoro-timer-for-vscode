@@ -1,27 +1,17 @@
-import assert = require('assert');
+import * as vscode from 'vscode';
 import { PomodoroConfig } from '../../config';
 import { PomodoroState } from '../../state';
-import * as sinon from 'sinon';
 import { ClockHelper } from '../support/clockHelper';
-import {
-  assertInitialState,
-  assertTaskName,
-  assertShortBreakStartedState,
-  assertWorkingStartedState,
-  assertWorkingFinishedState,
-  IntervalHandlerHelper,
-  assertBreakFinishedState,
-  assertLongBreakStartedState,
-  StoplHandlerHelper,
-} from '../support/customAssertions';
+import * as customAssert from '../support/customAssertions';
 
 suite('PomodoroState Test Suite', () => {
-  const config = new PomodoroConfig();
+  const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+  const config = new PomodoroConfig(wc);
 
   test('initialize state object', () => {
     const state = new PomodoroState(config);
 
-    assertInitialState(state, config);
+    customAssert.assertInitialState(state, config);
   });
 
   suite('startTimer', () => {
@@ -29,7 +19,8 @@ suite('PomodoroState Test Suite', () => {
     const fakeNowDateTime = 946684800000;
 
     let clock: ClockHelper;
-    const config = new PomodoroConfig();
+    const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    const config = new PomodoroConfig(wc);
     setup(() => {
       clock = new ClockHelper(fakeNowDateTime, config);
     });
@@ -40,15 +31,15 @@ suite('PomodoroState Test Suite', () => {
     });
     test('check state', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
 
       onTickHelper.assertCallCountDiff(1);
       onTickHelper.assertLastCalledWith(state, config.workingTimeMs);
@@ -56,15 +47,15 @@ suite('PomodoroState Test Suite', () => {
 
     test('ontick', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
 
       onTickHelper.assertCallCountDiff(1);
       onTickHelper.assertLastCalledWith(state, config.workingTimeMs);
@@ -81,22 +72,22 @@ suite('PomodoroState Test Suite', () => {
 
     test('first working time finished', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onFinishedHelper = new IntervalHandlerHelper();
+      const onFinishedHelper = new customAssert.IntervalHandlerHelper();
       state.onTimerFinished = onFinishedHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
       onTickHelper.assertCallCountDiff(1);
 
       clock.advanceUntileEndOfWorking();
 
-      assertWorkingFinishedState(
+      customAssert.assertWorkingFinishedState(
         state,
         config,
         onTickHelper,
@@ -106,48 +97,57 @@ suite('PomodoroState Test Suite', () => {
 
       clock.advanceUtilDelayTime();
 
-      assertShortBreakStartedState(state, config, new Date().valueOf(), 1);
+      customAssert.assertShortBreakStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        1,
+      );
     });
 
     test('start timer twice', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onFinishedHelper = new IntervalHandlerHelper();
+      const onFinishedHelper = new customAssert.IntervalHandlerHelper();
       state.onTimerFinished = onFinishedHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
 
       clock.advanceToNsecLater(2);
 
       state.startTimer('テストタスク2', 'プロジェクトB');
-      assertTaskName(state, 'テストタスク2', 'プロジェクトB');
-      assertWorkingStartedState(state, config, new Date().valueOf());
+      customAssert.assertTaskName(state, 'テストタスク2', 'プロジェクトB');
+      customAssert.assertWorkingStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+      );
     });
 
     test('second working time started', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onFinishedHelper = new IntervalHandlerHelper();
+      const onFinishedHelper = new customAssert.IntervalHandlerHelper();
       state.onTimerFinished = onFinishedHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
       onTickHelper.assertCallCountDiff(1);
 
       clock.advanceUntileEndOfWorking();
 
-      assertWorkingFinishedState(
+      customAssert.assertWorkingFinishedState(
         state,
         config,
         onTickHelper,
@@ -157,34 +157,44 @@ suite('PomodoroState Test Suite', () => {
 
       clock.advanceUtilDelayTime();
 
-      assertShortBreakStartedState(state, config, new Date().valueOf(), 1);
+      customAssert.assertShortBreakStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        1,
+      );
 
       clock.advanceUtilEndOfShortBreak();
 
-      assertBreakFinishedState(state, config, onFinishedHelper, 1);
+      customAssert.assertBreakFinishedState(state, config, onFinishedHelper, 1);
 
       clock.advanceUtilDelayTime();
-      assertWorkingStartedState(state, config, new Date().valueOf(), 1);
+      customAssert.assertWorkingStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        1,
+      );
     });
 
     test('second working time finished', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onFinishedHelper = new IntervalHandlerHelper();
+      const onFinishedHelper = new customAssert.IntervalHandlerHelper();
       state.onTimerFinished = onFinishedHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
       onTickHelper.assertCallCountDiff(1);
 
       clock.advanceUntileEndOfWorking();
 
-      assertWorkingFinishedState(
+      customAssert.assertWorkingFinishedState(
         state,
         config,
         onTickHelper,
@@ -194,18 +204,28 @@ suite('PomodoroState Test Suite', () => {
 
       clock.advanceUtilDelayTime();
 
-      assertShortBreakStartedState(state, config, new Date().valueOf(), 1);
+      customAssert.assertShortBreakStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        1,
+      );
 
       clock.advanceUtilEndOfShortBreak();
 
-      assertBreakFinishedState(state, config, onFinishedHelper, 1);
+      customAssert.assertBreakFinishedState(state, config, onFinishedHelper, 1);
 
       clock.advanceUtilDelayTime();
-      assertWorkingStartedState(state, config, new Date().valueOf(), 1);
+      customAssert.assertWorkingStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        1,
+      );
 
       clock.advanceUntileEndOfWorking();
 
-      assertWorkingFinishedState(
+      customAssert.assertWorkingFinishedState(
         state,
         config,
         onTickHelper,
@@ -216,16 +236,16 @@ suite('PomodoroState Test Suite', () => {
 
     test('forth working time finished', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onFinishedHelper = new IntervalHandlerHelper();
+      const onFinishedHelper = new customAssert.IntervalHandlerHelper();
       state.onTimerFinished = onFinishedHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
 
       let cycle = 0;
       for (let i = 0; i < 4; i++) {
@@ -233,7 +253,7 @@ suite('PomodoroState Test Suite', () => {
 
         clock.advanceUntileEndOfWorking();
 
-        assertWorkingFinishedState(
+        customAssert.assertWorkingFinishedState(
           state,
           config,
           onTickHelper,
@@ -244,24 +264,44 @@ suite('PomodoroState Test Suite', () => {
         clock.advanceUtilDelayTime();
 
         if (cycle !== 4) {
-          assertShortBreakStartedState(
+          customAssert.assertShortBreakStartedState(
             state,
             config,
             new Date().valueOf(),
             cycle,
           );
           clock.advanceUtilEndOfShortBreak();
-          assertBreakFinishedState(state, config, onFinishedHelper, cycle);
+          customAssert.assertBreakFinishedState(
+            state,
+            config,
+            onFinishedHelper,
+            cycle,
+          );
           clock.advanceUtilDelayTime();
         }
       }
-      assertLongBreakStartedState(state, config, new Date().valueOf(), cycle);
+      customAssert.assertLongBreakStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        cycle,
+      );
 
       clock.advanceUtilEndOfLongBreak();
-      assertBreakFinishedState(state, config, onFinishedHelper, cycle);
+      customAssert.assertBreakFinishedState(
+        state,
+        config,
+        onFinishedHelper,
+        cycle,
+      );
       clock.advanceUtilDelayTime();
 
-      assertWorkingStartedState(state, config, new Date().valueOf(), cycle);
+      customAssert.assertWorkingStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        cycle,
+      );
     });
   });
 
@@ -270,7 +310,8 @@ suite('PomodoroState Test Suite', () => {
     const fakeNowDateTime = 946684800000;
 
     let clock: ClockHelper;
-    const config = new PomodoroConfig();
+    const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    const config = new PomodoroConfig(wc);
     setup(() => {
       clock = new ClockHelper(fakeNowDateTime, config);
     });
@@ -279,27 +320,27 @@ suite('PomodoroState Test Suite', () => {
         clock.dispose();
       }
     });
-    test('check state', () => {
+    test('stop timer at working', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onStopHelper = new StoplHandlerHelper();
+      const onStopHelper = new customAssert.StoplHandlerHelper();
       state.onStopped = onStopHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
 
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
       const orgEndTimeMs = state.targetEndTimeMs;
       const orgInterval = state.getIntervalMs();
       clock.advanceUntileEndOfWorking();
 
       state.stopTimer('タスク停止');
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
       onStopHelper.assertCallCountDiff(1);
       const wipTime = orgInterval - (orgEndTimeMs - new Date().valueOf());
       console.log(
@@ -311,26 +352,26 @@ suite('PomodoroState Test Suite', () => {
       onStopHelper.assertLastCalledWith(state, wipTime, 'タスク停止');
     });
 
-    test('first working time finished', () => {
+    test('stop timer at break', () => {
       const state = new PomodoroState(config);
-      const onTickHelper = new IntervalHandlerHelper();
+      const onTickHelper = new customAssert.IntervalHandlerHelper();
       state.onTiked = onTickHelper.handler;
-      const onFinishedHelper = new IntervalHandlerHelper();
+      const onFinishedHelper = new customAssert.IntervalHandlerHelper();
       state.onTimerFinished = onFinishedHelper.handler;
-      const onStopHelper = new StoplHandlerHelper();
+      const onStopHelper = new customAssert.StoplHandlerHelper();
       state.onStopped = onStopHelper.handler;
 
-      assertInitialState(state, config);
+      customAssert.assertInitialState(state, config);
 
       state.startTimer('テストタスク', 'プロジェクトA');
 
-      assertTaskName(state, 'テストタスク', 'プロジェクトA');
-      assertWorkingStartedState(state, config, fakeNowDateTime);
+      customAssert.assertTaskName(state, 'テストタスク', 'プロジェクトA');
+      customAssert.assertWorkingStartedState(state, config, fakeNowDateTime);
       onTickHelper.assertCallCountDiff(1);
 
       clock.advanceUntileEndOfWorking();
 
-      assertWorkingFinishedState(
+      customAssert.assertWorkingFinishedState(
         state,
         config,
         onTickHelper,
@@ -340,7 +381,12 @@ suite('PomodoroState Test Suite', () => {
 
       clock.advanceUtilDelayTime();
 
-      assertShortBreakStartedState(state, config, new Date().valueOf(), 1);
+      customAssert.assertShortBreakStartedState(
+        state,
+        config,
+        new Date().valueOf(),
+        1,
+      );
 
       state.stopTimer('タスク完了');
       onStopHelper.assertLastCalledWith(state, 0, 'タスク完了');
