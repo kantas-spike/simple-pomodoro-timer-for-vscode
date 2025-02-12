@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import * as assert from 'assert';
-import * as utils from '../../utils';
-import { PomodoroConfig } from '../../config';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
