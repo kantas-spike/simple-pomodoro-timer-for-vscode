@@ -15,7 +15,8 @@ let stopTimerTaskProvider: vscode.Disposable | undefined;
 let outputChannel: vscode.OutputChannel;
 
 // 設定取得
-const config = new PomodoroConfig();
+const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+const config = new PomodoroConfig(wc);
 
 function updateStatusBar(state: PomodoroState, intervalMs: number | null) {
   if (statusBarItem) {
@@ -46,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
     const now = new Date().toLocaleString('ja-JP');
     const message = utils.getNotificationMessage(format, {
       '@time@': now,
-      '@taskName@': state.taskDesc,
+      '@taskName@': state.taskName,
       '@projectName@': state.projectName,
       '@cycleCount@': undefined,
       '@wipTime@': undefined,
@@ -66,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       const message = utils.getNotificationMessage(format, {
         '@time@': now,
-        '@taskName@': state.taskDesc,
+        '@taskName@': state.taskName,
         '@projectName@': state.projectName,
         '@cycleCount@': `${state.cycleCount}`,
         '@wipTime@': wipMinSec,

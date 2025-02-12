@@ -2,13 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { errorMonitor } from 'stream';
 
-const SECTION_ID = 'simple-pomodoro-timer';
-
 export class PomodoroConfig {
   private config: vscode.WorkspaceConfiguration;
 
-  constructor() {
-    this.config = vscode.workspace.getConfiguration(SECTION_ID);
+  constructor(config: vscode.WorkspaceConfiguration) {
+    this.config = config;
   }
 
   get workingTimeMs(): number {

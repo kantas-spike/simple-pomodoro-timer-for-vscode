@@ -1,6 +1,6 @@
 import { PomodoroConfig } from './config';
 
-type EventHandler = (state: PomodoroState, reason?: string) => void;
+type EventHandler = (state: PomodoroState) => void;
 type StopEventHandler = (
   state: PomodoroState,
   wipTimeMs: number,
@@ -29,7 +29,7 @@ class WorkingState implements InnerState {
     return intervalMs - remainingTimeMs;
   }
   getBellName(): string {
-    return this.state.cycleCount % 4 === 0
+    return this.state.cycleCount !== 0 && this.state.cycleCount % 4 === 0
       ? this.state.bellNameAtEndOfFourthWorking
       : this.state.bellNameAtEndOfNormalWorking;
   }
@@ -76,10 +76,9 @@ class BreakState implements InnerState {
 
 export class PomodoroState {
   private timerIntervalMs = 1000;
-  private timerDelayMs = 0;
   private stateMap: Map<StateName, InnerState>;
 
-  taskDesc: string = '';
+  taskName: string = '';
   projectName: string | undefined = undefined;
 
   currentState: StateName = 'Break';
@@ -91,6 +90,7 @@ export class PomodoroState {
   workingIntervalMs: number = 0;
   shortBreakIntervalMs: number = 0;
   longBreakIntervalMs: number = 0;
+  timerDelayMs = 0;
 
   bellNameAtEndOfNormalWorking: string = '';
   bellNameAtEndOfFourthWorking: string = '';
@@ -131,7 +131,7 @@ export class PomodoroState {
     this.timerIcon = this.timerIconForWorking;
     this.timerId = null;
     this.targetEndTimeMs = 0;
-    this.taskDesc = '';
+    this.taskName = '';
     this.projectName = undefined;
   }
 
@@ -147,6 +147,7 @@ export class PomodoroState {
   clearInterval(): void {
     if (this.timerId) {
       clearInterval(this.timerId);
+      this.timerId = null;
     }
   }
 
@@ -188,14 +189,14 @@ export class PomodoroState {
     if (this.timerId) {
       this.stopTimer();
     }
-    this.taskDesc = taskName;
+    this.taskName = taskName;
     this.projectName = projectName;
 
     this.switchTimer();
     this.onStarted(this);
   }
 
-  switchTimer(taskDesc: string | null = null) {
+  switchTimer(taskName: string | null = null) {
     this.getCurrentState().switch();
     this.getCurrentState().init();
 
