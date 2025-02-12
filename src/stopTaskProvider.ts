@@ -55,6 +55,8 @@ export class StopTimerTaskProvider implements vscode.TaskProvider {
                   : '停止理由には1文字以上を入力してください';
               },
             });
+          } else {
+            reason = resolvedDefinition.reason;
           }
           return new StopTimerTaskTerminal(this.state, reason);
         },
