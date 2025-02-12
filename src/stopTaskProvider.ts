@@ -6,7 +6,9 @@ interface StopTimerTaskDefinition extends vscode.TaskDefinition {
 }
 
 export class StopTimerTaskProvider implements vscode.TaskProvider {
-  static TaskType = 'stopPomodoroTimer';
+  static taskSource = 'Pomodoro Timer';
+  static taskType = 'stopPomodoroTimer';
+  static taskName = 'Stop Timer';
   private state: PomodoroState;
   private defaultReason: string = '@@@@@DUMMY@@@@@';
 
@@ -25,7 +27,7 @@ export class StopTimerTaskProvider implements vscode.TaskProvider {
   private getTasks(): vscode.Task[] {
     const tasks: vscode.Task[] = [];
     const defaultDefinition: StopTimerTaskDefinition = {
-      type: StopTimerTaskProvider.TaskType,
+      type: StopTimerTaskProvider.taskType,
       reason: this.defaultReason,
     };
     tasks.push(this.getTask(defaultDefinition));
@@ -36,8 +38,8 @@ export class StopTimerTaskProvider implements vscode.TaskProvider {
     const task = new vscode.Task(
       definition,
       vscode.TaskScope.Workspace,
-      'Start Timer',
-      StopTimerTaskProvider.TaskType,
+      StopTimerTaskProvider.taskName,
+      StopTimerTaskProvider.taskSource,
       new vscode.CustomExecution(
         async (
           resolvedDefinition: vscode.TaskDefinition,

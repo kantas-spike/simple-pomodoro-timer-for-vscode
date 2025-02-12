@@ -8,7 +8,9 @@ interface StartTimerTaskDefinition extends vscode.TaskDefinition {
 }
 
 export class StartTimerTaskProvider implements vscode.TaskProvider {
-  static TaskType = 'startPomodoroTimer';
+  static taskSource = 'Pomodoro Timer';
+  static taskType = 'startPomodoroTimer';
+  static taskName = 'Start Timer';
   private state: PomodoroState;
   private defaultTaskName: string = '@@@@@DUMMY@@@@@';
 
@@ -27,7 +29,7 @@ export class StartTimerTaskProvider implements vscode.TaskProvider {
   private getTasks(): vscode.Task[] {
     const tasks: vscode.Task[] = [];
     const defaultDefinition: StartTimerTaskDefinition = {
-      type: StartTimerTaskProvider.TaskType,
+      type: StartTimerTaskProvider.taskType,
       taskName: this.defaultTaskName,
     };
     tasks.push(this.getTask(defaultDefinition));
@@ -38,8 +40,8 @@ export class StartTimerTaskProvider implements vscode.TaskProvider {
     const task = new vscode.Task(
       definition,
       vscode.TaskScope.Workspace,
-      'Start Timer',
-      StartTimerTaskProvider.TaskType,
+      StartTimerTaskProvider.taskName,
+      StartTimerTaskProvider.taskSource,
       new vscode.CustomExecution(
         async (
           resolvedDefinition: vscode.TaskDefinition,
