@@ -15,7 +15,8 @@ let stopTimerTaskProvider: vscode.Disposable | undefined;
 let outputChannel: vscode.OutputChannel;
 
 // 設定取得
-const config = new PomodoroConfig();
+const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+const config = new PomodoroConfig(wc);
 
 function updateStatusBar(state: PomodoroState, intervalMs: number | null) {
   if (statusBarItem) {
