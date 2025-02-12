@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import * as assert from 'assert';
 import { PomodoroConfig } from '../../config';
+import { ConfigHelper } from '../support/configHelper';
 
 suite('PomodoroConfig Test Suite', () => {
-  vscode.window.showInformationMessage('Start all tests.');
-
-  test('test properties', () => {
-    const config = new PomodoroConfig();
+  test('test properties', async () => {
+    const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    const config = new PomodoroConfig(wc);
     assert.strictEqual(0.2 * 60 * 1000, config.workingTimeMs);
     assert.strictEqual(0.1 * 60 * 1000, config.shortBreakTimeMs);
     assert.strictEqual(0.3 * 60 * 1000, config.longBreakTimeMs);
@@ -33,9 +33,52 @@ suite('PomodoroConfig Test Suite', () => {
       config.stopMessgeFormat,
     );
   });
+  suite('ConfigHelperを使ったテスト', () => {
+    let wc: vscode.WorkspaceConfiguration;
+    setup(() => {
+      wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    });
 
-  test('test methods', () => {
-    const config = new PomodoroConfig();
-    assert.strictEqual('/tmp/audio', config.getAudioDir('/tmp'));
+    test('statusbarAlignment', () => {
+      const fakeWc = new ConfigHelper(
+        wc,
+        new Map([['statusbarAlignment', 'left']]),
+      );
+      const config = new PomodoroConfig(fakeWc);
+      assert.strictEqual(
+        config.statusbarAlignment,
+        vscode.StatusBarAlignment.Left,
+      );
+    });
+
+    test('getAudioDir', () => {
+      let fakeWc = new ConfigHelper(wc, new Map([['audioDir', null]]));
+      let config = new PomodoroConfig(fakeWc);
+      assert.strictEqual(config.getAudioDir('/tmp'), '/tmp/audio');
+
+      fakeWc = new ConfigHelper(
+        wc,
+        new Map([['audioDir', '/usr/local/audio']]),
+      );
+      config = new PomodoroConfig(fakeWc);
+      assert.strictEqual(config.getAudioDir('/tmp'), '/usr/local/audio');
+    });
+
+    test('getConfigValue', () => {
+      const fakeWc = new ConfigHelper(
+        wc,
+        new Map([['statusbarAlignment', undefined]]),
+      );
+      let config = new PomodoroConfig(fakeWc);
+      assert.throws(
+        () => {
+          config.statusbarAlignment;
+        },
+        {
+          name: 'Error',
+          message: '設定項目: statusbarAlignmentが定義されていません。',
+        },
+      );
+    });
   });
 });
