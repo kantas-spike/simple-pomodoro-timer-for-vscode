@@ -159,6 +159,10 @@ Visual Studio Code シンプルなポモドーロタイマーです。(参考: [
 
 ## Release Notes
 
+### 0.0.10
+
+タイマーを止めれない不具合を修正
+
 ### 0.0.9
 
 パッケージ名を`simple-pomodoro-timer-for-vscode`に変更
