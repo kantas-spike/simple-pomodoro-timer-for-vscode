@@ -144,9 +144,12 @@ export class PomodoroState {
     );
   }
 
-  clearInterval(): void {
+  clearInterval(onClear?: () => void): void {
     if (this.timerId) {
       clearInterval(this.timerId);
+      if (onClear) {
+        onClear();
+      }
       this.timerId = null;
     }
   }
@@ -209,11 +212,11 @@ export class PomodoroState {
   }
 
   stopTimer(reason: string | undefined = undefined) {
-    this.clearInterval();
+    this.clearInterval(() => {
+      const wipTimeMs = this.getCurrentState().getWipTimeMs();
+      this.onStopped(this, wipTimeMs, reason);
+    });
 
-    const wipTimeMs = this.getCurrentState().getWipTimeMs();
-
-    this.onStopped(this, wipTimeMs, reason);
     this.reset();
   }
 }
