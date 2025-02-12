@@ -89,11 +89,11 @@ export function activate(context: vscode.ExtensionContext) {
   updateStatusBar(state, 0);
 
   startTimerTaskProvider = vscode.tasks.registerTaskProvider(
-    StartTimerTaskProvider.TaskType,
+    StartTimerTaskProvider.taskType,
     new StartTimerTaskProvider(state),
   );
   stopTimerTaskProvider = vscode.tasks.registerTaskProvider(
-    StopTimerTaskProvider.TaskType,
+    StopTimerTaskProvider.taskType,
     new StopTimerTaskProvider(state),
   );
 }
