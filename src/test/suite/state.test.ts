@@ -5,7 +5,9 @@ import { ClockHelper } from '../support/clockHelper';
 import * as customAssert from '../support/customAssertions';
 
 suite('PomodoroState Test Suite', () => {
-  const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+  const wc = vscode.workspace.getConfiguration(
+    'simple-pomodoro-timer-for-vscode',
+  );
   const config = new PomodoroConfig(wc);
 
   test('initialize state object', () => {
@@ -19,7 +21,9 @@ suite('PomodoroState Test Suite', () => {
     const fakeNowDateTime = 946684800000;
 
     let clock: ClockHelper;
-    const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    const wc = vscode.workspace.getConfiguration(
+      'simple-pomodoro-timer-for-vscode',
+    );
     const config = new PomodoroConfig(wc);
     setup(() => {
       clock = new ClockHelper(fakeNowDateTime, config);
@@ -310,7 +314,9 @@ suite('PomodoroState Test Suite', () => {
     const fakeNowDateTime = 946684800000;
 
     let clock: ClockHelper;
-    const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    const wc = vscode.workspace.getConfiguration(
+      'simple-pomodoro-timer-for-vscode',
+    );
     const config = new PomodoroConfig(wc);
     setup(() => {
       clock = new ClockHelper(fakeNowDateTime, config);

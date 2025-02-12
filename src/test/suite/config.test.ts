@@ -5,7 +5,9 @@ import { ConfigHelper } from '../support/configHelper';
 
 suite('PomodoroConfig Test Suite', () => {
   test('test properties', async () => {
-    const wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
+    const wc = vscode.workspace.getConfiguration(
+      'simple-pomodoro-timer-for-vscode',
+    );
     const config = new PomodoroConfig(wc);
     assert.strictEqual(0.2 * 60 * 1000, config.workingTimeMs);
     assert.strictEqual(0.1 * 60 * 1000, config.shortBreakTimeMs);
@@ -36,7 +38,7 @@ suite('PomodoroConfig Test Suite', () => {
   suite('ConfigHelperを使ったテスト', () => {
     test('statusbarAlignment', () => {
       const fakeWc = new ConfigHelper(
-        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
+        vscode.workspace.getConfiguration('simple-pomodoro-timer-for-vscode'),
         new Map([['statusbarAlignment', 'left']]),
       );
       const config = new PomodoroConfig(fakeWc);
@@ -55,14 +57,14 @@ suite('PomodoroConfig Test Suite', () => {
 
     test('getAudioDir', () => {
       let fakeWc = new ConfigHelper(
-        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
+        vscode.workspace.getConfiguration('simple-pomodoro-timer-for-vscode'),
         new Map([['audioDir', null]]),
       );
       let config = new PomodoroConfig(fakeWc);
       assert.strictEqual(config.getAudioDir('/tmp'), '/tmp/audio');
 
       fakeWc = new ConfigHelper(
-        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
+        vscode.workspace.getConfiguration('simple-pomodoro-timer-for-vscode'),
         new Map([['audioDir', '/usr/local/audio']]),
       );
       config = new PomodoroConfig(fakeWc);
@@ -71,7 +73,7 @@ suite('PomodoroConfig Test Suite', () => {
 
     test('getConfigValue', () => {
       const fakeWc = new ConfigHelper(
-        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
+        vscode.workspace.getConfiguration('simple-pomodoro-timer-for-vscode'),
         new Map([['statusbarAlignment', undefined]]),
       );
       let config = new PomodoroConfig(fakeWc);

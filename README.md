@@ -1,24 +1,30 @@
-# simple-pomodoro-timer
+# simple-pomodoro-timer-for-vscode
 
-シンプルなポモドーロタイマーです。(参考: [ポモドーロ・テクニック - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%9D%E3%83%A2%E3%83%89%E3%83%BC%E3%83%AD%E3%83%BB%E3%83%86%E3%82%AF%E3%83%8B%E3%83%83%E3%82%AF))
+Visual Studio Code シンプルなポモドーロタイマーです。(参考: [ポモドーロ・テクニック - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%9D%E3%83%A2%E3%83%89%E3%83%BC%E3%83%AD%E3%83%BB%E3%83%86%E3%82%AF%E3%83%8B%E3%83%83%E3%82%AF))
 
 ## install方法
 
 本リポジトリをクローン後、以下を実行してください。
 
-1. vscode extension のパッケージファイル(simple-pomodoro-timer-x.x.x.vsix [^1])の作成
+1. 必要なパッケージをインストール
+
+   ```shell
+   npm install
+   ```
+
+2. vscode extension のパッケージファイル(simple-pomodoro-timer-for-vscode-x.x.x.vsix [^1])の作成
 
    ```shell
    npm run package
    ```
 
-2. パッケージファイル(simple-pomodoro-timer-x.x.x.vsix [^1]) をインストール
+3. パッケージファイル(simple-pomodoro-timer-for-vscode-x.x.x.vsix [^1]) をインストール
 
    ```shell
-   code --install-extension ./simple-pomodoro-timer-x.x.x.vsix
+   code --install-extension ./simple-pomodoro-timer-for-vscode-x.x.x.vsix
    ```
 
-3. すでに旧バージョンのパッケージをインストール済みの場合は、本拡張機能を再起動してください。
+4. すでに旧バージョンのパッケージをインストール済みの場合は、本拡張機能を再起動してください。
 
 ## Features
 
@@ -152,6 +158,10 @@
 | @message@             | タイマーを停止した理由                     |
 
 ## Release Notes
+
+### 0.0.9
+
+パッケージ名を`simple-pomodoro-timer-for-vscode`に変更
 
 ### 0.0.8
 

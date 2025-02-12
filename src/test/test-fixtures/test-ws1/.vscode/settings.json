@@ -1,5 +1,5 @@
 {
-  "simple-pomodoro-timer.defaultLongBreakTime": 0.3,
-  "simple-pomodoro-timer.defaultShortBreakTime": 0.1,
-  "simple-pomodoro-timer.defaultWorkingTime": 0.2
+  "simple-pomodoro-timer-for-vscode.defaultLongBreakTime": 0.3,
+  "simple-pomodoro-timer-for-vscode.defaultShortBreakTime": 0.1,
+  "simple-pomodoro-timer-for-vscode.defaultWorkingTime": 0.2
 }

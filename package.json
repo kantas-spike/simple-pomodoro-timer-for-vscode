@@ -1,5 +1,5 @@
 {
-  "name": "simple-pomodoro-timer",
+  "name": "simple-pomodoro-timer-for-vscode",
   "displayName": "Simple Pomodoro Timer",
   "description": "simple pomodoro timer",
   "publisher": "kantas-spike",
@@ -7,8 +7,8 @@
     "name": "kantas-spike"
   },
   "license": "MIT",
-  "repository": "github:kantas-spike/simple-pomodoro-timer",
-  "version": "0.0.8",
+  "repository": "github:kantas-spike/simple-pomodoro-timer-for-vscode",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -51,72 +51,72 @@
       {
         "title": "Simple Pomodoro Timer",
         "properties": {
-          "simple-pomodoro-timer.defaultWorkingTime": {
+          "simple-pomodoro-timer-for-vscode.defaultWorkingTime": {
             "type": "number",
             "default": 25,
             "description": "This is the default working time set for the pomodoro timer. The unit of time is minutes."
           },
-          "simple-pomodoro-timer.defaultShortBreakTime": {
+          "simple-pomodoro-timer-for-vscode.defaultShortBreakTime": {
             "type": "number",
             "default": 5,
             "description": "This is the default short break time set for the pomodoro timer. The unit of time is minutes."
           },
-          "simple-pomodoro-timer.defaultLongBreakTime": {
+          "simple-pomodoro-timer-for-vscode.defaultLongBreakTime": {
             "type": "number",
             "default": 15,
             "description": "This is the default long break time set for the pomodoro timer. The unit of time is minutes."
           },
-          "simple-pomodoro-timer.audioDir": {
+          "simple-pomodoro-timer-for-vscode.audioDir": {
             "type": "string",
             "default": null,
             "description": "Path to the directory containing the audio files. if null, audioDir is `${extensionPath}/audio`."
           },
-          "simple-pomodoro-timer.bellNameAtEndOfNormalWorking": {
+          "simple-pomodoro-timer-for-vscode.bellNameAtEndOfNormalWorking": {
             "type": "string",
             "default": "marimba02.mp3",
             "description": "Audio file name of the bell at the end of the normal working."
           },
-          "simple-pomodoro-timer.bellNameAtEndOfFourthWorking": {
+          "simple-pomodoro-timer-for-vscode.bellNameAtEndOfFourthWorking": {
             "type": "string",
             "default": "pulse01.mp3",
             "description": "Audio file name of the bell at the end of the fourth working."
           },
-          "simple-pomodoro-timer.bellNameAtEndOfBreak": {
+          "simple-pomodoro-timer-for-vscode.bellNameAtEndOfBreak": {
             "type": "string",
             "default": "cymbal01.mp3",
             "description": "Audio file name of the bell at the end of the break."
           },
-          "simple-pomodoro-timer.timerIconForWorking": {
+          "simple-pomodoro-timer-for-vscode.timerIconForWorking": {
             "type": "string",
             "default": "🍅",
             "description": "Timer icon for working."
           },
-          "simple-pomodoro-timer.timerIconForBreak": {
+          "simple-pomodoro-timer-for-vscode.timerIconForBreak": {
             "type": "string",
             "default": "🥔",
             "description": "Timer icon for break."
           },
-          "simple-pomodoro-timer.statusbarAlignment": {
+          "simple-pomodoro-timer-for-vscode.statusbarAlignment": {
             "type": "string",
             "default": "right",
             "description": "Set the position (left or right) to place the timer on the status bar."
           },
-          "simple-pomodoro-timer.statusbarPriority": {
+          "simple-pomodoro-timer-for-vscode.statusbarPriority": {
             "type": "number",
             "default": -100,
             "description": "The priority of displaying the timer in the status bar. A higher value means the item will appear further to the left."
           },
-          "simple-pomodoro-timer.delayTimeWhenSwitchTimer": {
+          "simple-pomodoro-timer-for-vscode.delayTimeWhenSwitchTimer": {
             "type": "number",
             "default": 3,
             "description": "Delay time(sec) when switching timers."
           },
-          "simple-pomodoro-timer.startMessageFormat": {
+          "simple-pomodoro-timer-for-vscode.startMessageFormat": {
             "type": "string",
             "default": "@time@ [start] @@projectName@ @taskName@",
             "description": "Notification message format when timer started."
           },
-          "simple-pomodoro-timer.stopMessageFormat": {
+          "simple-pomodoro-timer-for-vscode.stopMessageFormat": {
             "type": "string",
             "default": "@time@ [stop ] @@projectName@ @taskName@(@timerIconForWorking@x@cycleCount@ + @wipTime@) @message@",
             "description": "Notification message format when timer stopped."
