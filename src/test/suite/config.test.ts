@@ -34,14 +34,9 @@ suite('PomodoroConfig Test Suite', () => {
     );
   });
   suite('ConfigHelperを使ったテスト', () => {
-    let wc: vscode.WorkspaceConfiguration;
-    setup(() => {
-      wc = vscode.workspace.getConfiguration('simple-pomodoro-timer');
-    });
-
     test('statusbarAlignment', () => {
       const fakeWc = new ConfigHelper(
-        wc,
+        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
         new Map([['statusbarAlignment', 'left']]),
       );
       const config = new PomodoroConfig(fakeWc);
@@ -49,15 +44,25 @@ suite('PomodoroConfig Test Suite', () => {
         config.statusbarAlignment,
         vscode.StatusBarAlignment.Left,
       );
+      fakeWc.updateValuesToOverwrite(
+        new Map([['statusbarAlignment', 'right']]),
+      );
+      assert.strictEqual(
+        config.statusbarAlignment,
+        vscode.StatusBarAlignment.Right,
+      );
     });
 
     test('getAudioDir', () => {
-      let fakeWc = new ConfigHelper(wc, new Map([['audioDir', null]]));
+      let fakeWc = new ConfigHelper(
+        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
+        new Map([['audioDir', null]]),
+      );
       let config = new PomodoroConfig(fakeWc);
       assert.strictEqual(config.getAudioDir('/tmp'), '/tmp/audio');
 
       fakeWc = new ConfigHelper(
-        wc,
+        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
         new Map([['audioDir', '/usr/local/audio']]),
       );
       config = new PomodoroConfig(fakeWc);
@@ -66,7 +71,7 @@ suite('PomodoroConfig Test Suite', () => {
 
     test('getConfigValue', () => {
       const fakeWc = new ConfigHelper(
-        wc,
+        vscode.workspace.getConfiguration('simple-pomodoro-timer'),
         new Map([['statusbarAlignment', undefined]]),
       );
       let config = new PomodoroConfig(fakeWc);
