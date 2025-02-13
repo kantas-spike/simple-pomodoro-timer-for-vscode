@@ -23,7 +23,7 @@ export function assertInitialState(
   assert.strictEqual(state.timerIconForBreak, config.timerIconForBreak);
   assert.strictEqual(state.timerIcon, config.timerIconForWroking);
   assert.strictEqual(state.cycleCount, 0);
-  assert.strictEqual(state.currentState, 'Break');
+  assert.strictEqual(state.currentState, 'Stopped');
   assert.strictEqual(state.timerId, null);
 }
 
