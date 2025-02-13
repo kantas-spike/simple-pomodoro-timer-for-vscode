@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "repository": "github:kantas-spike/simple-pomodoro-timer-for-vscode",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "engines": {
     "vscode": "^1.96.0"
   },
