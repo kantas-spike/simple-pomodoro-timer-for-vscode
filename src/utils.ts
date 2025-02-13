@@ -2,6 +2,17 @@ import * as path from 'path';
 
 const MIN = 60 * 1000;
 
+function dateToYYYYMMDDhhmmss(date: Date) {
+  return date.toLocaleString('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 function millisecToHHMM(ms: number | null): string {
   if (ms === null) {
     return '--:--';
@@ -44,4 +55,4 @@ function getNotificationMessage(
   return result;
 }
 
-export { millisecToHHMM, getNotificationMessage };
+export { millisecToHHMM, getNotificationMessage, dateToYYYYMMDDhhmmss };

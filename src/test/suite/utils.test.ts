@@ -3,6 +3,10 @@ import * as assert from 'assert';
 import * as utils from '../../utils';
 
 suite('Utils Test Suite', () => {
+  test('utils.dateToYYYYMMDDhhmmss', () => {
+    const date = new Date('2000-01-02T03:04:05');
+    assert.strictEqual(utils.dateToYYYYMMDDhhmmss(date), '2000/01/02 03:04:05');
+  });
   test('utils.millisecToHHMM', () => {
     assert.strictEqual('00:01', utils.millisecToHHMM(1 * 1000));
     assert.strictEqual('00:10', utils.millisecToHHMM(10 * 1000));

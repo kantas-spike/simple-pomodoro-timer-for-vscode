@@ -46,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
   };
   state.onStarted = (state) => {
     const format = config.startMessgeFormat;
-    const now = new Date().toLocaleString('ja-JP');
+    const now = utils.dateToYYYYMMDDhhmmss(new Date());
     const message = utils.getNotificationMessage(format, {
       '@time@': now,
       '@taskName@': state.taskName,
@@ -62,10 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
   };
   state.onStopped = (state, wipTimeMs, reason) => {
     updateStatusBar(state, null);
-    if (state.timerId) {
-      const format = config.stopMessgeFormat;
-      const now = new Date().toLocaleString('ja-JP');
-      const wipMinSec = utils.millisecToHHMM(wipTimeMs);
+    const now = utils.dateToYYYYMMDDhhmmss(new Date());
 
       const message = utils.getNotificationMessage(format, {
         '@time@': now,
