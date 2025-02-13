@@ -62,21 +62,22 @@ export function activate(context: vscode.ExtensionContext) {
   };
   state.onStopped = (state, wipTimeMs, reason) => {
     updateStatusBar(state, null);
+    const format = config.stopMessgeFormat;
     const now = utils.dateToYYYYMMDDhhmmss(new Date());
+    const wipMinSec = utils.millisecToHHMM(wipTimeMs);
 
-      const message = utils.getNotificationMessage(format, {
-        '@time@': now,
-        '@taskName@': state.taskName,
-        '@projectName@': state.projectName,
-        '@cycleCount@': `${state.cycleCount}`,
-        '@wipTime@': wipMinSec,
-        '@timerIconForWorking@': state.timerIconForWorking,
-        '@timerIconForBreak@': state.timerIconForBreak,
-        '@message@': reason,
-      });
-      vscode.window.showInformationMessage(message);
-      outputChannel.appendLine(message);
-    }
+    const message = utils.getNotificationMessage(format, {
+      '@time@': now,
+      '@taskName@': state.taskName,
+      '@projectName@': state.projectName,
+      '@cycleCount@': `${state.cycleCount}`,
+      '@wipTime@': wipMinSec,
+      '@timerIconForWorking@': state.timerIconForWorking,
+      '@timerIconForBreak@': state.timerIconForBreak,
+      '@message@': reason,
+    });
+    vscode.window.showInformationMessage(message);
+    outputChannel.appendLine(message);
   };
 
   statusBarItem = vscode.window.createStatusBarItem(

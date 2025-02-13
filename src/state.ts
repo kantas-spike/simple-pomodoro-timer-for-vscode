@@ -7,7 +7,7 @@ type StopEventHandler = (
   reason?: string,
 ) => void;
 type IntervalEventHandler = (state: PomodoroState, interval: number) => void;
-type StateName = 'Working' | 'Break';
+type StateName = 'Working' | 'Break' | 'Stopped';
 interface InnerState {
   init(): void;
   incrementCycle(): void;
@@ -15,6 +15,31 @@ interface InnerState {
   getWipTimeMs(): number;
   switch(): void;
   getBellName(): string;
+}
+
+class StoppedState implements InnerState {
+  private state: PomodoroState;
+  constructor(state: PomodoroState) {
+    this.state = state;
+  }
+  init(): void {
+    this.state.timerIcon = this.state.timerIconForWorking;
+  }
+  incrementCycle(): void {
+    throw new Error('Method not implemented.');
+  }
+  getIntervalMs(): number {
+    throw new Error('Method not implemented.');
+  }
+  getWipTimeMs(): number {
+    throw new Error('Method not implemented.');
+  }
+  switch(): void {
+    this.state.currentState = 'Working';
+  }
+  getBellName(): string {
+    throw new Error('Method not implemented.');
+  }
 }
 
 class WorkingState implements InnerState {
@@ -118,15 +143,16 @@ export class PomodoroState {
 
     this.timerDelayMs = config.delayTimeWhenSwitchTimer * 1000;
 
-    this.reset();
-
     this.stateMap = new Map<StateName, InnerState>();
     this.stateMap.set('Working', new WorkingState(this));
     this.stateMap.set('Break', new BreakState(this));
+    this.stateMap.set('Stopped', new StoppedState(this));
+
+    this.reset();
   }
 
   reset(): void {
-    this.currentState = 'Break';
+    this.currentState = 'Stopped';
     this.cycleCount = 0;
     this.timerIcon = this.timerIconForWorking;
     this.timerId = null;
@@ -147,9 +173,6 @@ export class PomodoroState {
   clearInterval(onClear?: () => void): void {
     if (this.timerId) {
       clearInterval(this.timerId);
-      if (onClear) {
-        onClear();
-      }
       this.timerId = null;
     }
   }
@@ -212,10 +235,12 @@ export class PomodoroState {
   }
 
   stopTimer(reason: string | undefined = undefined) {
-    this.clearInterval(() => {
+    this.clearInterval();
+
+    if (this.currentState !== 'Stopped') {
       const wipTimeMs = this.getCurrentState().getWipTimeMs();
       this.onStopped(this, wipTimeMs, reason);
-    });
+    }
 
     this.reset();
   }
